@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow" />
+<title>Partner - exampleairport</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link href="/partner/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="/partner/css/bootstrap-datetimepicker.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="/partner/css/style.css?v=1.992463" media="screen" rel="stylesheet" type="text/css" />
+<link href="/partner/css/flags.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="/partner/img/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+<!--[if lt IE 9]><script type="text/javascript" src="/partner/js/html5shiv.js"></script><![endif]-->
+<!--[if lt IE 9]><script type="text/javascript" src="/partner/js/respond.min.js"></script><![endif]-->
+<script src="/partner/js/jquery.min.js" type="text/javascript"></script>
+<script src="/partner/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/partner/js/moment.js" type="text/javascript"></script>
+<script src="/partner/js/bootstrap-datetimepicker.js" type="text/javascript"></script>
+<script src="/partner/js/script.js?v=1.992463" type="text/javascript"></script>
+<script src="/partner/js/bootstrap-datetimepicker.nl.js" charset="UTF-8"></script>
+<script src="/partner/js/jstz.min.js"></script>
+</head>
+<body>
+<header>
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand bold" href="/partner"><img src="/partner/img/t2a-partner.png" alt="" /></a>
+</div>
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+<ul class="nav navbar-nav navbar-right">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+Boekingen <b class="caret"></b>
+</a>
+<ul class="dropdown-menu">
+<li><a href="/partner/bookings">&raquo; Boekingen</a></li>
+<li><a href="/partner/rideslist">&raquo; Rittenlijst</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+Facturen <b class="caret"></b>
+</a>
+<ul class="dropdown-menu">
+<li><a href="/partner/invoices.php">&raquo; Facturen</a></li>
+<li><a href="/partner/notes.php">&raquo; Nota's / Creditnota's</a></li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+Instellingen <b class="caret"></b>
+</a>
+<ul class="dropdown-menu">
+<li><a href="/partner/account">&raquo; Account</a></li>
+<li><a href="/partner/cars">&raquo; Auto's</a></li>
+<li><a href="/partner/drivers">&raquo; Chauffeurs</a></li>
+<li><a href="/partner/documents">&raquo; Documenten</a></li>
+<li><a href="/partner/km-mile-rates">&raquo; Kilometer/mijl tarieven</a></li>
+<li><a href="/partner/meetingpoints">&raquo; Ontmoetingsplekken</a></li>
+</ul>
+</li>
+<li>
+<a href="/partner/contact">Contact</a>
+</li>
+<li>
+<a href="/partner/faq">FAQ</a>
+</li>
+<li>
+<a href="/partner/logout">Uitloggen</a>
+</li>
+<li>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div style="clear: both;">&nbsp;</div>
+<main>
+<div class="container-fluid">
+<div class="row-fluid">
+<div class="col-md-12">
+<br /><br /><br />
+<div class="alert alert-danger bold"><button class="close" data-dismiss="alert" type="button" style="color: #fff;">×</button><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color: #fff;"></span> Deze boeking is op dit moment vergrendeld door een andere partner. De vergrendeling zal vervallen in 15 minuten. Probeer het later nog eens.<br /></div><ol class="breadcrumb">
+<li class="active bold">Menu</a></li>
+</ol>
+<div class="row">
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-7-user-add.png" alt="" class="marginright5" /> Account </h1>
+</div>
+<div class="panel-body">
+<ul>
+<li>Verander bedrijfsgegevens.</li>
+<li>Verander wachtwoord.</li>
+<li>Luchthavens toevoegen voor notificatie.</li>
+</ul>
+<hr />
+<a href="/partner/account?actionmode=reset">
+Ga naar account </a>
+</div>
+</div>
+</div>
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-145-folder-open.png" alt="" class="marginright5" /> Boekingen </h1>
+</div>
+<div class="panel-body">
+<ul>
+<li>Bekijk nieuwe boekingen.</li>
+<li>Bekijk geplande boekingen.</li>
+<li>Bekijk voltooide boekingen.</li>
+<li>Verstuur bericht naar klant.</li>
+<li>Verstuur bericht naar <strong>example<span style="color: #ff3333;">2</span>AIRPORT<span style="color: #ff3333;">.COM</span></strong></li>
+</ul>
+<hr />
+<a href="/partner/bookings">
+Ga naar boekingen </a>
+</div>
+</div>
+</div>
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-465-server-plus.png" alt="" class="marginright5" /> Rittenlijst </h1>
+</div>
+<div class="panel-body">
+<ul>
+<li>Nieuwe boekingen aan uw account toevoegen.</li>
+</ul>
+<hr />
+<a href="/partner/rideslist">
+Ga naar de rittenlijst </a>
+</div>
+</div>
+</div>
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-539-invoice.png" alt="" class="marginright5" /> Facturen / Nota's </h1>
+</div>
+<div class="panel-body">
+<div class="pull-left">
+<ul>
+<li>Bekijk uw facturen.</li>
+<li>Download uw facturen.</li>
+<li>Print uw facturen.</li>
+</ul>
+</div>
+<div class="pull-right">
+<ul>
+<li>Bekijk uw creditnota's.</li>
+<li>Download uw creditnota's.</li>
+<li>Print uw creditnota's.</li>
+</ul>
+</div>
+<div class="clear5">&nbsp;</div>
+<hr />
+<div class="pull-left">
+<a href="/partner/invoices.php">
+Ga naar facturen </a>
+</div>
+<div class="pull-right">
+<a href="/partner/notes.php">
+Ga naar nota's / creditnota's </a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<br />
+<div class="row">
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-527-user-conversation.png" alt="" class="marginright5" /> Ontmoetingsplekken </h1>
+</div>
+<div class="panel-body">
+<ul>
+<li>Ontmoetingsplekken toevoegen.</li>
+<li>Ontmoetingsplekken bewerken.</li>
+<li>Ontmoetingsplekken verwijderen.</li>
+</ul>
+<hr />
+<a href="/partner/meetingpoints">
+Ga naar ontmoetingsplekken </a>
+</div>
+</div>
+</div>
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-6-car.png" alt="" class="marginright5" /> Auto's </h1>
+</div>
+<div class="panel-body">
+<ul>
+<li>Auto's toevoegen.</li>
+<li>Auto's bewerken.</li>
+<li>Auto's verwijderen.</li>
+</ul>
+<hr />
+<a href="/partner/cars">
+Ga naar auto's </a>
+</div>
+</div>
+</div>
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-25-parents.png" alt="" class="marginright5" /> Chauffeurs </h1>
+</div>
+<div class="panel-body">
+<ul>
+<li>Chauffeurs toevoegen.</li>
+<li>Chauffeurs bewerken.</li>
+<li>Chauffeurs verwijderen.</li>
+</ul>
+<hr />
+<a href="/partner/drivers">
+Ga naar chauffeurs </a>
+</div>
+</div>
+</div>
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-37-file.png" alt="" class="marginright5" /> Documenten </h1>
+</div>
+<div class="panel-body">
+<ul>
+<li>Documenten toevoegen.</li>
+<li>Documenten verwijderen.</li>
+</ul>
+<hr />
+<a href="/partner/documents">
+Ga naar documenten </a>
+</div>
+</div>
+</div>
+</div>
+<br />
+<div class="row">
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-344-thumbs-up.png" alt="" class="marginright5" /> Één-klik acceptaties - NEW!!
+</h1>
+</div>
+<div class="panel-body">
+<ul>
+<li>Stel een standaard auto, chauffeur en ontmoetingsplek in voor een luchthaven.</li>
+</ul>
+<hr />
+<a href="/partner/oneclicks">
+Ga naar één-klik acceptaties </a>
+</div>
+</div>
+</div>
+<div class="col-sm-4 col-md-3">
+<div class="panel panel-warning">
+<div class="panel-heading panel-heading2">
+<h1 class="lettercolor">
+<img src="/partner/img/glyphicons/png/glyphicons-205-unlock.png" alt="" class="marginright5" /> Uitloggen </h1>
+</div>
+<div class="panel-body">
+<a href="/partner/logout">Uitloggen</a>
+</div>
+</div>
+</div>
+</div> <br /><br />
+</div>
+</div>
+</div>
+</main>
+<footer>
+<div class="pull-left">
+&nbsp;Ingelogd als: example&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Tijdzone: Europe/Amsterdam </div>
+<div class="pull-right" style="margin-top: 4px;">
+<a href="/partner/?actionmode=setlanguage&language=de&ref=|partner|">
+<div class="flag flag-de flagpadding pull-left">&nbsp;</div>
+</a>
+<a href="/partner/?actionmode=setlanguage&language=en&ref=|partner|">
+<div class="flag flag-en flagpadding pull-left">&nbsp;</div>
+</a>
+<a href="/partner/?actionmode=setlanguage&language=es&ref=|partner|">
+<div class="flag flag-es flagpadding pull-left">&nbsp;</div>
+</a>
+ <a href="/partner/?actionmode=setlanguage&language=fr&ref=|partner|">
+<div class="flag flag-fr flagpadding pull-left">&nbsp;</div>
+</a>
+<div class="flag flag-nl flagpadding pull-left transparent_class">&nbsp;</div>
+<a href="/partner/?actionmode=setlanguage&language=pt&ref=|partner|">
+<div class="flag flag-pt flagpadding pull-left">&nbsp;</div>
+</a>
+</div>
+<div class="pull-right">
+<a href="/partner/conditions">Algemene voorwaarden</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+</footer>
+</body>
+</html>
+

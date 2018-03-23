@@ -1,0 +1,707 @@
+This is a multi-part message in MIME format.
+--b1_1cKjfTh5H3wKZV783gNLbzPJPMAwrzenJTsfxlqA5mo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+
+                        
+                        Nieuwe boeking in de rittenlijst - 309490
+                        
+                            a { color: #005ca4; font-weight: bold; font-family: Helvetica, Arial; font-size: 12px;}  
+                            div, p, td { font-size: 12px; font-family: Helvetica, Arial;}
+                            td { vertical-align: top; font-size: 12px; font-family: Helvetica, Arial; padding-right: 20px;}
+                            p, div, a, td { font-family: Helvetica, Arial; font-size: 12px; }
+                            em { font-style: normal; }
+                            table{margin: 0; padding: 0; font-family: Helvetica, Arial;}
+                            hr{margin-top: 20px; margin-bottom: 20px; border: 0; border-top: 1px solid #eee;}
+                            .lettercolor{color: #d11242;}
+                        
+                        
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+                                
+                                    Dit is een automatisch gegenereerde e-mail, gelieve niet reageren op dit bericht.
+
+Beste partner,
+
+
+Er is een nieuwe boeking toegevoegd aan de rittenlijst.
+We denken dat deze boeking geschikt is voor u.
+
+Klik op de onderstaande link om de boeking te bekijken en te bevestigen als u deze boeking wilt voltooien.De boeking gegevens:
+Boekingsnummer:309490Van: Silodam  A, , Amsterdam, Países BajosNaar: AMS: Amsterdam Airport Schiphol&nbsp;Aantal reizigers:2Aantal koffers:2&nbsp;Aantal babyzitjes:0Aantal stoelverhogers:0Aantal extra ophaal adressen:0Meet & greet:NeeBijzondere bagage:NeeHuisdieren:NeeOpmerkingen:Estoy hospedad en una casa bote 😉&nbsp;Type reis:Enkele reisOphaaldatum en tijdstip:29 Maart 2018 04:00
+Type vervoer:
+Sedan
+Totaalprijs:
+EUR 38.00Aanbetaling:EUR 38.00Contante betaling in de example:EUR 0.00
+U ontvangt:EUR 29.05 *
+* T2A commissie is al ingehouden van dit bedrag.
+Uw vergoeding zal de week nadat de rit is voltooid worden overgeschreven. ACCEPTEERAFWIJZEN&nbsp;Wilt u direct laten weten of u deze rit kan rijden (groene knop) of niet kan rijden (rode knop).
+
+- Drukt u op de groene knop (de boeking is dan definitief van u en kan niet meer aan example teruggegeven worden), dan komt u in uw partnergedeelte waar u de aanvullende gegevens moet verwerken en de klant kan bevestigen vanuit het systeem.
+
+- Drukt u op de rode knop dan volgt er geen actie, maar weten we dat u deze rit niet kan rijden.
+
+
+Met vriendelijke groet,
+
+example.COM
+                                
+                                &#x2714; Meer dan 250.000 tevreden klanten &nbsp; &nbsp; &nbsp; &#x2714; Veilig online betalingen
+                           
+                    
+            
+
+--b1_1cKjfTh5H3wKZV783gNLbzPJPMAwrzenJTsfxlqA5mo
+Content-Type: multipart/related;
+	boundary="b2_1cKjfTh5H3wKZV783gNLbzPJPMAwrzenJTsfxlqA5mo"
+
+--b2_1cKjfTh5H3wKZV783gNLbzPJPMAwrzenJTsfxlqA5mo
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+                        <head>
+                        <title>Nieuwe boeking in de rittenlijst - 309490</t=
+itle>
+                        <style type=3D"text/css">
+                            a { color: #005ca4; font-weight: bold; font-fam=
+ily: Helvetica, Arial; font-size: 12px;} =20
+                            div, p, td { font-size: 12px; font-family: Helv=
+etica, Arial;}
+                            td { vertical-align: top; font-size: 12px; font=
+-family: Helvetica, Arial; padding-right: 20px;}
+                            p, div, a, td { font-family: Helvetica, Arial; =
+font-size: 12px; }
+                            em { font-style: normal; }
+                            table{margin: 0; padding: 0; font-family: Helve=
+tica, Arial;}
+                            hr{margin-top: 20px; margin-bottom: 20px; borde=
+r: 0; border-top: 1px solid #eee;}
+                            .lettercolor{color: #d11242;}
+                        </style>
+                        </head>
+                        <body style=3D"margin: 0; background: #e0e0e0; text=
+-align:center;">
+                            <div style=3D"padding: 0; text-align: left; wid=
+th: 800px; margin: 0 auto; background: #e0e0e0; ">
+                                <div style=3D"text-align: center; border-bo=
+ttom: 10px solid #000; background: #FEDC00; ">
+                                    <a href=3D"https://www.example.com=
+/nl">
+                                        <img src=3D"cid:logo" style=3D"bord=
+er: 0; max-width: 50%; padding-top:5px; margin-bottom: -5px;" alt=3D"exampleA=
+irport" />
+                                    </a>
+                                </div>
+                                <div style=3D"padding: 40px; padding-bottom=
+: 20px; background: #fff; font-family: Helvetica, Arial; font-size: 12px;">
+                                    <div style=3D"margin-top: 5px; margin-b=
+ottom: 5px; text-align: center; border: 1px solid #d11242; color: #d11242; =
+padding: 5px; font-size: 15px; background-color: #f2dede; font-weight: bold=
+;">Dit is een automatisch gegenereerde e-mail, gelieve niet reageren op dit=
+ bericht.<br /></div><br />Beste partner,<br /><br /><br />Er is een nieuwe=
+ boeking toegevoegd aan de rittenlijst.<br />We denken dat deze boeking ges=
+chikt is voor u.<br /><br />Klik op de onderstaande link om de boeking te b=
+ekijken en te bevestigen als u deze boeking wilt voltooien.<hr /><b style=
+=3D"color: #d11242;">De boeking gegevens:</b><br /><table cellspacing=3D"0"=
+ cellpadding=3D"0" style=3D"padding-top: 5px;"><tr><td><b>Boekingsnummer:</=
+b></td><td>309490</td></tr><tr><td><b>Van:</b></td><td><img src=3D"cid:icon=
+_address" alt=3D"" /> Silodam  A, , Amsterdam, Pa=C3=ADses Bajos</td></tr><=
+tr><td><b>Naar:</b></td><td><img src=3D"cid:icon_airport" alt=3D"" /> AMS: =
+Amsterdam Airport Schiphol</td></tr><tr><td colspan=3D"2">&nbsp;</td></tr><=
+tr><td><b>Aantal reizigers:</b></td><td>2</td></tr><tr><td><b>Aantal koffer=
+s:</b></td><td>2</td></tr><tr><td colspan=3D"2">&nbsp;</td></tr><tr><td><b>=
+Aantal babyzitjes:</b></td><td>0</td></tr><tr><td><b>Aantal stoelverhogers:=
+</b></td><td>0</td></tr><tr><td><b>Aantal extra ophaal adressen:</b></td><t=
+d>0</td></tr><tr><td><b>Meet & greet:</b></td><td>Nee</td></tr><tr><td><b>B=
+ijzondere bagage:</b></td><td>Nee</td></tr><tr><td><b>Huisdieren:</b></td><=
+td>Nee</td></tr><tr><td><b>Opmerkingen:</b></td><td>Estoy hospedad en una c=
+asa bote =F0=9F=98=89</td></tr><tr><td colspan=3D"2">&nbsp;</td></tr><tr><t=
+d style=3D"vertical-align: middle;"><b>Type reis:</b></td><td >Enkele reis<=
+/td></tr><tr><td style=3D"vertical-align: middle;"><b>Ophaaldatum en tijdst=
+ip:</b></td><td >29 Maart 2018 04:00</td></tr><tr><td><br /><b>Type vervoer=
+:</b></td><td><br />Sedan</td></tr><tr><td><br /><b>Totaalprijs:</b></td><t=
+d><br />EUR 38.00</td></tr><tr><td><b>Aanbetaling:</b></td><td>EUR 38.00</t=
+d></tr><tr><td><b>Contante betaling in de example:</b></td><td>EUR 0.00</td></=
+tr><tr><td colspan=3D"2"><br /></td></tr><tr><td><b>U ontvangt:</b></td><td=
+>EUR 29.05 *<br />* T2A commissie is al ingehouden van dit bedrag.</td></tr=
+><tr><td colspan=3D"2" style=3D"color: #d11242; font-weight: bold;"><br />U=
+w vergoeding zal de week nadat de rit is voltooid worden overgeschreven.</t=
+d></tr></table><hr /><div style=3D"font-weight: bold; width: 45%; text-alig=
+n: center; float: left;  "> <a style=3D"font-size: 17px;display: block; col=
+or: #fff; background: #009900; text-decoration: none; padding: 10px 20px;" =
+href=3D"https://www.example.com/partner/?entity=3D4917&token=3Dcb2552e=
+7ddade0383230dcba0881f728&url=3Dbooking|309490|bbca3492459890202580174b25d2=
+975e">ACCEPTEER</a></div><div style=3D"font-weight: bold; width: 45%; text-=
+align: center; float: right;"><a style=3D"font-size: 17px; display: block; =
+color: #fff; background: #d11242; padding: 10px 20px; text-decoration: none=
+; " href=3D"https://www.example.com/partner/?entity=3D4917&token=3Dcb2=
+552e7ddade0383230dcba0881f728&url=3Ddecline-booking|309490|||ref=3Drideslis=
+t">AFWIJZEN</a></div><div style=3D"clear: both; height: 1px; font-size: 1px=
+; margin: 0; padding: 0;">&nbsp;</div><hr />Wilt u direct laten weten of u =
+deze rit kan rijden (groene knop) of niet kan rijden (rode knop).<br /><br =
+/>- Drukt u op de groene knop (de boeking is dan definitief van u en kan ni=
+et meer aan example teruggegeven worden), dan komt u in uw partnergede=
+elte waar u de aanvullende gegevens moet verwerken en de klant kan bevestig=
+en vanuit het systeem.<br /><br />- Drukt u op de rode knop dan volgt er ge=
+en actie, maar weten we dat u deze rit niet kan rijden.<br /><br /><br />Me=
+t vriendelijke groet,<br /><br /><b>example<span style=3D"color: #d11242;">2</=
+span>AIRPORT<span style=3D"color: #d11242;">.COM</span></b>
+                                </div><div style=3D"text-align: center; bac=
+kground: #000; color: #fff; padding: 10px;">
+                                &#x2714; <span style=3D"white-space:nowrap;=
+">Meer dan 250.000 tevreden klanten</span> &nbsp; &nbsp; &nbsp; &#x2714; <s=
+pan style=3D"white-space:nowrap;">Veilig online betalingen</span>
+                           </div></div>
+                    </body>
+            </html>
+--b2_1cKjfTh5H3wKZV783gNLbzPJPMAwrzenJTsfxlqA5mo
+Content-Type: image/png; name="logo-com.png"
+Content-Transfer-Encoding: base64
+Content-ID: <logo>
+Content-Disposition: inline; filename=logo-com.png
+
+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
+LGfBAAAAAElFTkSuQmCC
+
+--b2_1cKjfTh5H3wKZV783gNLbzPJPMAwrzenJTsfxlqA5mo
+Content-Type: image/png; name="icon-airport.png"
+Content-Transfer-Encoding: base64
+Content-ID: <icon_airport>
+Content-Disposition: inline; filename=icon-airport.png
+
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAYAAADphp8SAAAAlUlEQVR4AWMgAOyB+B0QmzNQCGKA
++D8Qh40ahBP0Qg3qJdcARyA+DTYEgU+DxYkECkC8EKQRD14MVocDcANxETTN/CeEoeoqwPrQwHE0
+RRuhAZ0BFauABvhaNMtOoxt0E0mzBJK4D1RDIpKYCJKhlzG9hgTwGISpj0jQCDVoCiVpaApaAK8g
+yxRoGMwHhQfU0D34vAIAjtk/oE6iEbUAAAAASUVORK5CYII=
+
+--b2_1cKjfTh5H3wKZV783gNLbzPJPMAwrzenJTsfxlqA5mo
+Content-Type: image/png; name="icon-address.png"
+Content-Transfer-Encoding: base64
+Content-ID: <icon_address>
+Content-Disposition: inline; filename=icon-address.png
+
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAYAAADphp8SAAAAj0lEQVR4Ab3OgQUDQRBG4QMBcK2k
+ixSTBgIOuBIOHJAGFiAwNaSC7WAJ4BxsHnZiYBk75OcDa56dHFuwQXfFHTe490BtNhOuELimB9Zq
+QyMRdaJ4Qyuqgzh+4vLGJfITa49GrKdGdtSghGlp8kAg/+7NZCAkMOuHTgheKJFQwazvfw8lHCjN
+Bxlz5/1A0uMvth6laEyn0qoAAAAASUVORK5CYII=
+
+--b2_1cKjfTh5H3wKZV783gNLbzPJPMAwrzenJTsfxlqA5mo--
+
+
+--b1_1cKjfTh5H3wKZV783gNLbzPJPMAwrzenJTsfxlqA5mo--
+
+
+This is a multi-part message in MIME format.
+--b1_XGFCGIkvAS3qRGK9zuZkpaEi7gDxLNTjUWxzmBk47Y
+Content-Type: text/plain; charset=us-ascii
+
+
+                        
+                        Nieuwe boeking in de rittenlijst - 309985
+                        
+                            a { color: #005ca4; font-weight: bold; font-family: Helvetica, Arial; font-size: 12px;}  
+                            div, p, td { font-size: 12px; font-family: Helvetica, Arial;}
+                            td { vertical-align: top; font-size: 12px; font-family: Helvetica, Arial; padding-right: 20px;}
+                            p, div, a, td { font-family: Helvetica, Arial; font-size: 12px; }
+                            em { font-style: normal; }
+                            table{margin: 0; padding: 0; font-family: Helvetica, Arial;}
+                            hr{margin-top: 20px; margin-bottom: 20px; border: 0; border-top: 1px solid #eee;}
+                            .lettercolor{color: #d11242;}
+                        
+                        
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+                                
+                                    Dit is een automatisch gegenereerde e-mail, gelieve niet reageren op dit bericht.
+
+Beste partner,
+
+
+Er is een nieuwe boeking toegevoegd aan de rittenlijst.
+We denken dat deze boeking geschikt is voor u.
+
+Klik op de onderstaande link om de boeking te bekijken en te bevestigen als u deze boeking wilt voltooien.De boeking gegevens:
+Boekingsnummer:309985Van: Korte Vleerstraat ,  VL, Den Haag, NederlandNaar: RTM: Rotterdam The Hague Airport&nbsp;Aantal reizigers:2Aantal koffers:2&nbsp;Aantal babyzitjes:0Aantal stoelverhogers:0Aantal extra ophaal adressen:0Meet & greet:NeeBijzondere bagage:NeeHuisdieren:Nee&nbsp;Type reis:Enkele reisOphaaldatum en tijdstip:30 Maart 2018 06:00
+Type vervoer:
+Sedan
+Totaalprijs:
+EUR 38.00Aanbetaling:EUR 38.00Contante betaling in de example:EUR 0.00
+U ontvangt:EUR 29.05 *
+* T2A commissie is al ingehouden van dit bedrag.
+Uw vergoeding zal de week nadat de rit is voltooid worden overgeschreven. ACCEPTEERAFWIJZEN&nbsp;Wilt u direct laten weten of u deze rit kan rijden (groene knop) of niet kan rijden (rode knop).
+
+- Drukt u op de groene knop (de boeking is dan definitief van u en kan niet meer aan example teruggegeven worden), dan komt u in uw partnergedeelte waar u de aanvullende gegevens moet verwerken en de klant kan bevestigen vanuit het systeem.
+
+- Drukt u op de rode knop dan volgt er geen actie, maar weten we dat u deze rit niet kan rijden.
+
+
+Met vriendelijke groet,
+
+example.COM
+                                
+                                &#x2714; Meer dan 250.000 tevreden klanten &nbsp; &nbsp; &nbsp; &#x2714; Veilig online betalingen
+                           
+                    
+            
+
+--b1_XGFCGIkvAS3qRGK9zuZkpaEi7gDxLNTjUWxzmBk47Y
+Content-Type: multipart/related;
+	boundary="b2_XGFCGIkvAS3qRGK9zuZkpaEi7gDxLNTjUWxzmBk47Y"
+
+--b2_XGFCGIkvAS3qRGK9zuZkpaEi7gDxLNTjUWxzmBk47Y
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+                        <head>
+                        <title>Nieuwe boeking in de rittenlijst - 309985</t=
+itle>
+                        <style type=3D"text/css">
+                            a { color: #005ca4; font-weight: bold; font-fam=
+ily: Helvetica, Arial; font-size: 12px;} =20
+                            div, p, td { font-size: 12px; font-family: Helv=
+etica, Arial;}
+                            td { vertical-align: top; font-size: 12px; font=
+-family: Helvetica, Arial; padding-right: 20px;}
+                            p, div, a, td { font-family: Helvetica, Arial; =
+font-size: 12px; }
+                            em { font-style: normal; }
+                            table{margin: 0; padding: 0; font-family: Helve=
+tica, Arial;}
+                            hr{margin-top: 20px; margin-bottom: 20px; borde=
+r: 0; border-top: 1px solid #eee;}
+                            .lettercolor{color: #d11242;}
+                        </style>
+                        </head>
+                        <body style=3D"margin: 0; background: #e0e0e0; text=
+-align:center;">
+                            <div style=3D"padding: 0; text-align: left; wid=
+th: 800px; margin: 0 auto; background: #e0e0e0; ">
+                                <div style=3D"text-align: center; border-bo=
+ttom: 10px solid #000; background: #FEDC00; ">
+                                    <a href=3D"https://www.example.com=
+/nl">
+                                        <img src=3D"cid:logo" style=3D"bord=
+er: 0; max-width: 50%; padding-top:5px; margin-bottom: -5px;" alt=3D"exampleA=
+irport" />
+                                    </a>
+                                </div>
+                                <div style=3D"padding: 40px; padding-bottom=
+: 20px; background: #fff; font-family: Helvetica, Arial; font-size: 12px;">
+                                    <div style=3D"margin-top: 5px; margin-b=
+ottom: 5px; text-align: center; border: 1px solid #d11242; color: #d11242; =
+padding: 5px; font-size: 15px; background-color: #f2dede; font-weight: bold=
+;">Dit is een automatisch gegenereerde e-mail, gelieve niet reageren op dit=
+ bericht.<br /></div><br />Beste partner,<br /><br /><br />Er is een nieuwe=
+ boeking toegevoegd aan de rittenlijst.<br />We denken dat deze boeking ges=
+chikt is voor u.<br /><br />Klik op de onderstaande link om de boeking te b=
+ekijken en te bevestigen als u deze boeking wilt voltooien.<hr /><b style=
+=3D"color: #d11242;">De boeking gegevens:</b><br /><table cellspacing=3D"0"=
+ cellpadding=3D"0" style=3D"padding-top: 5px;"><tr><td><b>Boekingsnummer:</=
+b></td><td>309985</td></tr><tr><td><b>Van:</b></td><td><img src=3D"cid:icon=
+_address" alt=3D"" /> Korte Vleerstraat ,  VL, Den Haag, Nederland</td></tr=
+><tr><td><b>Naar:</b></td><td><img src=3D"cid:icon_airport" alt=3D"" /> RTM=
+: Rotterdam The Hague Airport</td></tr><tr><td colspan=3D"2">&nbsp;</td></t=
+r><tr><td><b>Aantal reizigers:</b></td><td>2</td></tr><tr><td><b>Aantal kof=
+fers:</b></td><td>2</td></tr><tr><td colspan=3D"2">&nbsp;</td></tr><tr><td>=
+<b>Aantal babyzitjes:</b></td><td>0</td></tr><tr><td><b>Aantal stoelverhoge=
+rs:</b></td><td>0</td></tr><tr><td><b>Aantal extra ophaal adressen:</b></td=
+><td>0</td></tr><tr><td><b>Meet & greet:</b></td><td>Nee</td></tr><tr><td><=
+b>Bijzondere bagage:</b></td><td>Nee</td></tr><tr><td><b>Huisdieren:</b></t=
+d><td>Nee</td></tr><tr><td colspan=3D"2">&nbsp;</td></tr><tr><td style=3D"v=
+ertical-align: middle;"><b>Type reis:</b></td><td >Enkele reis</td></tr><tr=
+><td style=3D"vertical-align: middle;"><b>Ophaaldatum en tijdstip:</b></td>=
+<td >30 Maart 2018 06:00</td></tr><tr><td><br /><b>Type vervoer:</b></td><t=
+d><br />Sedan</td></tr><tr><td><br /><b>Totaalprijs:</b></td><td><br />EUR =
+38.00</td></tr><tr><td><b>Aanbetaling:</b></td><td>EUR 38.00</td></tr><tr><=
+td><b>Contante betaling in de example:</b></td><td>EUR 0.00</td></tr><tr><td c=
+olspan=3D"2"><br /></td></tr><tr><td><b>U ontvangt:</b></td><td>EUR 29.05 *=
+<br />* T2A commissie is al ingehouden van dit bedrag.</td></tr><tr><td col=
+span=3D"2" style=3D"color: #d11242; font-weight: bold;"><br />Uw vergoeding=
+ zal de week nadat de rit is voltooid worden overgeschreven.</td></tr></tab=
+le><hr /><div style=3D"font-weight: bold; width: 45%; text-align: center; f=
+loat: left;  "> <a style=3D"font-size: 17px;display: block; color: #fff; ba=
+ckground: #009900; text-decoration: none; padding: 10px 20px;" href=3D"http=
+s://www.example.com/partner/?entity=3D4917&token=3Dcb2552e7ddade038323=
+0dcba0881f728&url=3Dbooking|309985|89de4dc574d4d00ebcb98f4b05d2e83c">ACCEPT=
+EER</a></div><div style=3D"font-weight: bold; width: 45%; text-align: cente=
+r; float: right;"><a style=3D"font-size: 17px; display: block; color: #fff;=
+ background: #d11242; padding: 10px 20px; text-decoration: none; " href=3D"=
+https://www.example.com/partner/?entity=3D4917&token=3Dcb2552e7ddade03=
+83230dcba0881f728&url=3Ddecline-booking|309985|||ref=3Drideslist">AFWIJZEN<=
+/a></div><div style=3D"clear: both; height: 1px; font-size: 1px; margin: 0;=
+ padding: 0;">&nbsp;</div><hr />Wilt u direct laten weten of u deze rit kan=
+ rijden (groene knop) of niet kan rijden (rode knop).<br /><br />- Drukt u =
+op de groene knop (de boeking is dan definitief van u en kan niet meer aan =
+example teruggegeven worden), dan komt u in uw partnergedeelte waar u =
+de aanvullende gegevens moet verwerken en de klant kan bevestigen vanuit he=
+t systeem.<br /><br />- Drukt u op de rode knop dan volgt er geen actie, ma=
+ar weten we dat u deze rit niet kan rijden.<br /><br /><br />Met vriendelij=
+ke groet,<br /><br /><b>example<span style=3D"color: #d11242;">2</span>AIRPORT=
+<span style=3D"color: #d11242;">.COM</span></b>
+                                </div><div style=3D"text-align: center; bac=
+kground: #000; color: #fff; padding: 10px;">
+                                &#x2714; <span style=3D"white-space:nowrap;=
+">Meer dan 250.000 tevreden klanten</span> &nbsp; &nbsp; &nbsp; &#x2714; <s=
+pan style=3D"white-space:nowrap;">Veilig online betalingen</span>
+                           </div></div>
+                    </body>
+            </html>
+--b2_XGFCGIkvAS3qRGK9zuZkpaEi7gDxLNTjUWxzmBk47Y
+Content-Type: image/png; name="logo-com.png"
+Content-Transfer-Encoding: base64
+Content-ID: <logo>
+Content-Disposition: inline; filename=logo-com.png
+
+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
+LGfBAAAAAElFTkSuQmCC
+
+--b2_XGFCGIkvAS3qRGK9zuZkpaEi7gDxLNTjUWxzmBk47Y
+Content-Type: image/png; name="icon-airport.png"
+Content-Transfer-Encoding: base64
+Content-ID: <icon_airport>
+Content-Disposition: inline; filename=icon-airport.png
+
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAYAAADphp8SAAAAlUlEQVR4AWMgAOyB+B0QmzNQCGKA
++D8Qh40ahBP0Qg3qJdcARyA+DTYEgU+DxYkECkC8EKQRD14MVocDcANxETTN/CeEoeoqwPrQwHE0
+RRuhAZ0BFauABvhaNMtOoxt0E0mzBJK4D1RDIpKYCJKhlzG9hgTwGISpj0jQCDVoCiVpaApaAK8g
+yxRoGMwHhQfU0D34vAIAjtk/oE6iEbUAAAAASUVORK5CYII=
+
+--b2_XGFCGIkvAS3qRGK9zuZkpaEi7gDxLNTjUWxzmBk47Y
+Content-Type: image/png; name="icon-address.png"
+Content-Transfer-Encoding: base64
+Content-ID: <icon_address>
+Content-Disposition: inline; filename=icon-address.png
+
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAYAAADphp8SAAAAj0lEQVR4Ab3OgQUDQRBG4QMBcK2k
+ixSTBgIOuBIOHJAGFiAwNaSC7WAJ4BxsHnZiYBk75OcDa56dHFuwQXfFHTe490BtNhOuELimB9Zq
+QyMRdaJ4Qyuqgzh+4vLGJfITa49GrKdGdtSghGlp8kAg/+7NZCAkMOuHTgheKJFQwazvfw8lHCjN
+Bxlz5/1A0uMvth6laEyn0qoAAAAASUVORK5CYII=
+
+--b2_XGFCGIkvAS3qRGK9zuZkpaEi7gDxLNTjUWxzmBk47Y--
+
+
+--b1_XGFCGIkvAS3qRGK9zuZkpaEi7gDxLNTjUWxzmBk47Y--
+
+
+This is a multi-part message in MIME format.
+--b1_MVniV7mRCpyKarVSsZkCsamlcZErEABxyb56kKwbGg
+Content-Type: text/plain; charset=us-ascii
+
+
+                        
+                        Nieuwe boeking in de rittenlijst - 309920
+                        
+                            a { color: #005ca4; font-weight: bold; font-family: Helvetica, Arial; font-size: 12px;}  
+                            div, p, td { font-size: 12px; font-family: Helvetica, Arial;}
+                            td { vertical-align: top; font-size: 12px; font-family: Helvetica, Arial; padding-right: 20px;}
+                            p, div, a, td { font-family: Helvetica, Arial; font-size: 12px; }
+                            em { font-style: normal; }
+                            table{margin: 0; padding: 0; font-family: Helvetica, Arial;}
+                            hr{margin-top: 20px; margin-bottom: 20px; border: 0; border-top: 1px solid #eee;}
+                            .lettercolor{color: #d11242;}
+                        
+                        
+                        
+                            
+                                
+                                    
+                                        
+                                    
+                                
+                                
+                                    Dit is een automatisch gegenereerde e-mail, gelieve niet reageren op dit bericht.
+
+Beste partner,
+
+
+Er is een nieuwe boeking toegevoegd aan de rittenlijst.
+We denken dat deze boeking geschikt is voor u.
+
+Klik op de onderstaande link om de boeking te bekijken en te bevestigen als u deze boeking wilt voltooien.De boeking gegevens:
+Boekingsnummer:309920Van: Hogewerf 157, 1082 NC, Amsterdam, NetherlandsNaar: AMS: Amsterdam Airport Schiphol&nbsp;Aantal reizigers:1Aantal koffers:1&nbsp;Aantal babyzitjes:0Aantal stoelverhogers:0Aantal extra ophaal adressen:0Meet & greet:NeeBijzondere bagage:NeeHuisdieren:Nee&nbsp;Type reis:Enkele reisOphaaldatum en tijdstip:30 Maart 2018 04:00
+Type vervoer:
+Sedan
+Totaalprijs:
+EUR 38.00Aanbetaling:EUR 38.00Contante betaling in de example:EUR 0.00
+U ontvangt:EUR 29.05 *
+* T2A commissie is al ingehouden van dit bedrag.
+Uw vergoeding zal de week nadat de rit is voltooid worden overgeschreven.&raquo; Bekijk hier de reservering.
+
+
+Met vriendelijke groet,
+
+example.COM
+                                
+                                &#x2714; Meer dan 250.000 tevreden klanten &nbsp; &nbsp; &nbsp; &#x2714; Veilig online betalingen
+                           
+                    
+            
+
+--b1_MVniV7mRCpyKarVSsZkCsamlcZErEABxyb56kKwbGg
+Content-Type: multipart/related;
+	boundary="b2_MVniV7mRCpyKarVSsZkCsamlcZErEABxyb56kKwbGg"
+
+--b2_MVniV7mRCpyKarVSsZkCsamlcZErEABxyb56kKwbGg
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+                        <head>
+                        <title>Nieuwe boeking in de rittenlijst - 309920</t=
+itle>
+                        <style type=3D"text/css">
+                            a { color: #005ca4; font-weight: bold; font-fam=
+ily: Helvetica, Arial; font-size: 12px;} =20
+                            div, p, td { font-size: 12px; font-family: Helv=
+etica, Arial;}
+                            td { vertical-align: top; font-size: 12px; font=
+-family: Helvetica, Arial; padding-right: 20px;}
+                            p, div, a, td { font-family: Helvetica, Arial; =
+font-size: 12px; }
+                            em { font-style: normal; }
+                            table{margin: 0; padding: 0; font-family: Helve=
+tica, Arial;}
+                            hr{margin-top: 20px; margin-bottom: 20px; borde=
+r: 0; border-top: 1px solid #eee;}
+                            .lettercolor{color: #d11242;}
+                        </style>
+                        </head>
+                        <body style=3D"margin: 0; background: #e0e0e0; text=
+-align:center;">
+                            <div style=3D"padding: 0; text-align: left; wid=
+th: 800px; margin: 0 auto; background: #e0e0e0; ">
+                                <div style=3D"text-align: center; border-bo=
+ttom: 10px solid #000; background: #FEDC00; ">
+                                    <a href=3D"https://www.example.com=
+/nl">
+                                        <img src=3D"cid:logo" style=3D"bord=
+er: 0; max-width: 50%; padding-top:5px; margin-bottom: -5px;" alt=3D"exampleA=
+irport" />
+                                    </a>
+                                </div>
+                                <div style=3D"padding: 40px; padding-bottom=
+: 20px; background: #fff; font-family: Helvetica, Arial; font-size: 12px;">
+                                    <div style=3D"margin-top: 5px; margin-b=
+ottom: 5px; text-align: center; border: 1px solid #d11242; color: #d11242; =
+padding: 5px; font-size: 15px; background-color: #f2dede; font-weight: bold=
+;">Dit is een automatisch gegenereerde e-mail, gelieve niet reageren op dit=
+ bericht.<br /></div><br />Beste partner,<br /><br /><br />Er is een nieuwe=
+ boeking toegevoegd aan de rittenlijst.<br />We denken dat deze boeking ges=
+chikt is voor u.<br /><br />Klik op de onderstaande link om de boeking te b=
+ekijken en te bevestigen als u deze boeking wilt voltooien.<hr /><b style=
+=3D"color: #d11242;">De boeking gegevens:</b><br /><table cellspacing=3D"0"=
+ cellpadding=3D"0" style=3D"padding-top: 5px;"><tr><td><b>Boekingsnummer:</=
+b></td><td>309920</td></tr><tr><td><b>Van:</b></td><td><img src=3D"cid:icon=
+_address" alt=3D"" /> Hogewerf 157, 1082 NC, Amsterdam, Netherlands</td></t=
+r><tr><td><b>Naar:</b></td><td><img src=3D"cid:icon_airport" alt=3D"" /> AM=
+S: Amsterdam Airport Schiphol</td></tr><tr><td colspan=3D"2">&nbsp;</td></t=
+r><tr><td><b>Aantal reizigers:</b></td><td>1</td></tr><tr><td><b>Aantal kof=
+fers:</b></td><td>1</td></tr><tr><td colspan=3D"2">&nbsp;</td></tr><tr><td>=
+<b>Aantal babyzitjes:</b></td><td>0</td></tr><tr><td><b>Aantal stoelverhoge=
+rs:</b></td><td>0</td></tr><tr><td><b>Aantal extra ophaal adressen:</b></td=
+><td>0</td></tr><tr><td><b>Meet & greet:</b></td><td>Nee</td></tr><tr><td><=
+b>Bijzondere bagage:</b></td><td>Nee</td></tr><tr><td><b>Huisdieren:</b></t=
+d><td>Nee</td></tr><tr><td colspan=3D"2">&nbsp;</td></tr><tr><td style=3D"v=
+ertical-align: middle;"><b>Type reis:</b></td><td >Enkele reis</td></tr><tr=
+><td style=3D"vertical-align: middle;"><b>Ophaaldatum en tijdstip:</b></td>=
+<td >30 Maart 2018 04:00</td></tr><tr><td><br /><b>Type vervoer:</b></td><t=
+d><br />Sedan</td></tr><tr><td><br /><b>Totaalprijs:</b></td><td><br />EUR =
+38.00</td></tr><tr><td><b>Aanbetaling:</b></td><td>EUR 38.00</td></tr><tr><=
+td><b>Contante betaling in de example:</b></td><td>EUR 0.00</td></tr><tr><td c=
+olspan=3D"2"><br /></td></tr><tr><td><b>U ontvangt:</b></td><td>EUR 29.05 *=
+<br />* T2A commissie is al ingehouden van dit bedrag.</td></tr><tr><td col=
+span=3D"2" style=3D"color: #d11242; font-weight: bold;"><br />Uw vergoeding=
+ zal de week nadat de rit is voltooid worden overgeschreven.</td></tr></tab=
+le><hr /><a href=3D"https://www.example.com/partner/?entity=3D4917&tok=
+en=3Dcb2552e7ddade0383230dcba0881f728&url=3Dbooking|309920|5fab83bfb27e4ceb=
+8cd3e50c1291dfc7" style=3D"border-radius: 4px; cursor: pointer; display: in=
+line-block; font-size: 14px; background-color: #57a900; color: #fff; line-h=
+eight: 1.42857; margin-bottom: 0; padding: 6px 12px; text-align: center; ve=
+rtical-align: middle; text-decoration: none; border-color: #4cae4c; white-s=
+pace: nowrap;">&raquo; Bekijk hier de reservering.</a><hr /><br /><br /><br=
+ />Met vriendelijke groet,<br /><br /><b>example<span style=3D"color: #d11242;=
+">2</span>AIRPORT<span style=3D"color: #d11242;">.COM</span></b>
+                                </div><div style=3D"text-align: center; bac=
+kground: #000; color: #fff; padding: 10px;">
+                                &#x2714; <span style=3D"white-space:nowrap;=
+">Meer dan 250.000 tevreden klanten</span> &nbsp; &nbsp; &nbsp; &#x2714; <s=
+pan style=3D"white-space:nowrap;">Veilig online betalingen</span>
+                           </div></div>
+                    </body>
+            </html>
+--b2_MVniV7mRCpyKarVSsZkCsamlcZErEABxyb56kKwbGg
+Content-Type: image/png; name="logo-com.png"
+Content-Transfer-Encoding: base64
+Content-ID: <logo>
+Content-Disposition: inline; filename=logo-com.png
+
+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
+LGfBAAAAAElFTkSuQmCC
+
+--b2_MVniV7mRCpyKarVSsZkCsamlcZErEABxyb56kKwbGg
+Content-Type: image/png; name="icon-airport.png"
+Content-Transfer-Encoding: base64
+Content-ID: <icon_airport>
+Content-Disposition: inline; filename=icon-airport.png
+
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAYAAADphp8SAAAAlUlEQVR4AWMgAOyB+B0QmzNQCGKA
++D8Qh40ahBP0Qg3qJdcARyA+DTYEgU+DxYkECkC8EKQRD14MVocDcANxETTN/CeEoeoqwPrQwHE0
+RRuhAZ0BFauABvhaNMtOoxt0E0mzBJK4D1RDIpKYCJKhlzG9hgTwGISpj0jQCDVoCiVpaApaAK8g
+yxRoGMwHhQfU0D34vAIAjtk/oE6iEbUAAAAASUVORK5CYII=
+
+--b2_MVniV7mRCpyKarVSsZkCsamlcZErEABxyb56kKwbGg
+Content-Type: image/png; name="icon-address.png"
+Content-Transfer-Encoding: base64
+Content-ID: <icon_address>
+Content-Disposition: inline; filename=icon-address.png
+
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAPCAYAAADphp8SAAAAj0lEQVR4Ab3OgQUDQRBG4QMBcK2k
+ixSTBgIOuBIOHJAGFiAwNaSC7WAJ4BxsHnZiYBk75OcDa56dHFuwQXfFHTe490BtNhOuELimB9Zq
+QyMRdaJ4Qyuqgzh+4vLGJfITa49GrKdGdtSghGlp8kAg/+7NZCAkMOuHTgheKJFQwazvfw8lHCjN
+Bxlz5/1A0uMvth6laEyn0qoAAAAASUVORK5CYII=
+
+--b2_MVniV7mRCpyKarVSsZkCsamlcZErEABxyb56kKwbGg--
+
+
+--b1_MVniV7mRCpyKarVSsZkCsamlcZErEABxyb56kKwbGg--
+
+

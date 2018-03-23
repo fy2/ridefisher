@@ -1,141 +1,615 @@
 package RideAway::AutoResponder;
 
-use 5.006;
-use strict;
-use warnings;
+use Moose;
+use MooseX::Configuration;
 
-=head1 NAME
+use Mail::IMAPClient;
+use DateTime;
+use Time::HiRes qw(sleep);
+use Audio::Beep;
+use namespace::autoclean;
+use MIME::QuotedPrint;
+use RideAway::Schema;
+use Log::Log4perl;
+use Net::SMS::TextmagicRest;
+use WWW::Telegram::BotAPI;
+use File::Touch;
 
-RideAway::AutoResponder - The great new RideAway::AutoResponder!
+my $logger = Log::Log4perl::get_logger();
 
-=head1 VERSION
+has imap_server => (
+    is            => 'ro',
+    isa           => 'Str',
+    section       => 'email',
+    key           => 'server',
+);
 
-Version 0.01
+has dsn => (
+    is            => 'ro',
+    isa           => 'Any',
+    section       => 'db',
+    key           => 'dsn',
+);
 
-=cut
+has telegram_token => (
+    is            => 'ro',
+    isa           => 'Any',
+    section       => 'telegram',
+    key           => 'token',
+);
 
-our $VERSION = '0.01';
+has telegram_chat_id => (
+    is            => 'ro',
+    isa           => 'Str',
+    section       => 'telegram',
+    key           => 'chat_id',
+);
 
+has telegram => (
+    is            => 'rw',
+    isa           => 'WWW::Telegram::BotAPI',
+    lazy          => '1',
+    builder       => '_build_telegram',
+);
 
-=head1 SYNOPSIS
+has text_magic => (
+    is            => 'rw',
+    isa           => 'Net::SMS::TextmagicRest',
+    lazy          => '1',
+    builder       => '_build_text_magic',
+);
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
-    use RideAway::AutoResponder;
-
-    my $foo = RideAway::AutoResponder->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
-
-=cut
-
-sub function1 {
+sub _build_text_magic {
+    my $self = shift;
+    my $tm = Net::SMS::TextmagicRest->new(
+        username => $self->sms_username,
+        token    => $self->sms_token,
+    );
+    return $tm;
 }
 
-=head2 function2
+sub _build_telegram {
+    my $self = shift;
 
-=cut
-
-sub function2 {
+    my $api = WWW::Telegram::BotAPI->new (
+        token => $self->telegram_token,
+    );
+    return $api;
 }
 
-=head1 AUTHOR
+sub send_telegram {
+    my ($self, $message) = @_;
+    eval {
+        $self->telegram->sendMessage ({
+            chat_id => $self->telegram_chat_id,
+            text    => $message,
+        });
+    };
+    if (my $err = $@) {
+        $logger->error("couldnt send via telegram [$err].");
+    }
+}
 
-Feyruz Yalcin, C<< <example at example.com> >>
+sub send_message {
+    my ($self, $message) = @_;
+    eval {
+        $self->telegram->sendMessage ({
+            chat_id => $self->telegram_chat_id,
+            text    => $message,
+        });
+    };
+    if (my $err = $@) {
+        $logger->error("couldnt send via telegram [$err]. Trying sms:");
+        $self->text_magic->send(
+            text    =>  $message,
+            phones  => ['+'. $self->phone ],
+        );
+    }
+}
 
-=head1 BUGS
+has schema => (
+    is            => 'ro',
+    isa           => 'Any',
+    lazy          => 1,
+    builder       => '_build_schema',
+);
 
-Please report any bugs or feature requests to C<bug-rideaway-autoresponder at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=RideAway-AutoResponder>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+sub _build_schema {
+    my $self = shift;
 
+    RideAway::Schema->connect(
+                                 $self->dsn,
+                                 undef,
+                                 undef,
+                                 { on_connect_do => ['PRAGMA foreign_keys = ON',
+                                                     'PRAGMA encoding="UTF-8"',
+                                                    ]
+                                }
+                             );
+}
 
+has imap_password => (
+    is            => 'ro',
+    isa           => 'Str',
+    section       => 'email',
+    key           => 'password',
+);
 
+has imap_username => (
+    is            => 'ro',
+    isa           => 'Str',
+    section       => 'email',
+    key           => 'username',
+);
 
-=head1 SUPPORT
+has imap_debug_file => (
+    is            => 'ro',
+    isa           => 'Str',
+    section       => 'email',
+    key           => 'debug_file',
+);
 
-You can find documentation for this module with the perldoc command.
+has sms_username => (
+    is            => 'ro',
+    isa           => 'Str',
+    section       => 'sms',
+    key           => 'username',
+);
 
-    perldoc RideAway::AutoResponder
+has sms_token => (
+    is            => 'ro',
+    isa           => 'Str',
+    section       => 'sms',
+    key           => 'token',
+);
 
+has phone => (
+    is            => 'ro',
+    isa           => 'Num',
+    section       => 'sms',
+    key           => 'phone',
+);
 
-You can also look for information at:
+has 'imap' => (
+    is => 'rw',
+    isa => 'Mail::IMAPClient',
+    builder => '_build_imap',
+    lazy => 1,
+);
 
-=over 4
+sub _build_imap {
+    my $self = shift;
 
-=item * RT: CPAN's request tracker (report bugs here)
+    my $client;
+    eval {
+        $client = Mail::IMAPClient->new(
+              Server    => $self->imap_server,
+              User      => $self->imap_username,
+              Password  => $self->imap_password,
+              Ssl       => 1,
+              Debug     => 1,
+              Keepalive => 1,
+              Debug_fh  => IO::File->new(">>" . $self->imap_debug_file)
+                  || die "Can't open imap debugging output file for write: $!\n"
+              ) or die $@;
+    };
+    if (my $err = $@) {
+        die $err;
+    }
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=RideAway-AutoResponder>
+    return $client;
+}
 
-=item * AnnoCPAN: Annotated CPAN documentation
+has 'beeper' => (
+    is => 'ro',
+    lazy => 1,
+    default => sub { Audio::Beep->new } ,
+);
 
-L<http://annocpan.org/dist/RideAway-AutoResponder>
+has 'music' => (
+    is => 'rw',
+    lazy => 1,
+    default => sub {
+        my $music = <<'EOM'; # a Smashing Pumpkins tune
+\bpm250 \norel \transpose''
+    d8 a, e a, d a, fis16 d a,8
+    d  a, e a, d a, fis16 d a,8
+EOM
+        return $music;
+    },
+);
 
-=item * CPAN Ratings
+has poll_seconds => (
+    is            => 'ro',
+    isa           => 'Num',
+    section       => 'timer',
+    key           => 'poll_seconds',
+    documentation => 'seconds to poll emails, (idle time)'
+);
 
-L<http://cpanratings.perl.org/d/RideAway-AutoResponder>
+has is_test_mode => (
+    is            => 'rw',
+    isa           => 'Bool',
+    default => 0,
+);
 
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/RideAway-AutoResponder/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-
-=head1 LICENSE AND COPYRIGHT
-
-Copyright 2018 Feyruz Yalcin.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of the the Artistic License (2.0). You may obtain a
-copy of the full license at:
-
-L<http://www.perlfoundation.org/artistic_license_2_0>
-
-Any use, modification, and distribution of the Standard or Modified
-Versions is governed by this Artistic License. By using, modifying or
-distributing the Package, you accept this license. Do not use, modify,
-or distribute the Package, if you do not accept this license.
-
-If your Modified Version has been derived from a Modified Version made
-by someone other than you, you are nevertheless required to ensure that
-your Modified Version complies with the requirements of this license.
-
-This license does not grant you the right to use any trademark, service
-mark, tradename, or logo of the Copyright Holder.
-
-This license includes the non-exclusive, worldwide, free-of-charge
-patent license to make, have made, use, offer to sell, sell, import and
-otherwise transfer the Package with respect to any patent claims
-licensable by the Copyright Holder that are necessarily infringed by the
-Package. If you institute patent litigation (including a cross-claim or
-counterclaim) against any party alleging that the Package constitutes
-direct or contributory patent infringement, then this Artistic License
-to you shall terminate on the date that such litigation is filed.
-
-Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER
-AND CONTRIBUTORS "AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
-THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY
-YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
-CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
-CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
-EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+=head1 METHODS
 
 =cut
 
-1; # End of RideAway::AutoResponder
+
+sub play_music {
+    beep(550, 500);
+}
+
+=head2 run
+
+=cut
+
+sub run {
+    my ($self) = @_;
+
+
+
+    $logger->debug('Enter run');
+    my $start_time  = DateTime->now(time_zone => "Europe/London");
+
+    my $imap = $self->imap;
+
+    $imap->select("Inbox");
+    my $tag;
+    unless ( $tag = $imap->idle ) {
+        $logger->("couldnt get the tag $@");
+        $self->gracefully_end();
+        exit;
+    }
+    $logger->debug("idling...");
+
+    my $seconds_to_go =  $self->poll_seconds;
+    #$self->send_telegram(sprintf "I will keep an eye on new rides for you. Polling [%s], At: [%s]"
+    #                        , $seconds_to_go
+    #                        , $start_time
+    #                   );
+    $logger->debug("Gonna poll for $seconds_to_go seconds!");
+
+    my $retry = 3;
+
+    POLLING:
+    while($seconds_to_go > 0) {
+
+        my $idlemsgs;
+        eval {
+            $idlemsgs = $imap->idle_data();
+        };
+        # see if this is a disconnect:
+        if (my $err = $@) {
+            if ($retry > 0 ) {
+                $logger->warn("idle_data error: $err. I will retry connecting...");
+                $imap->noop or $imap->reconnect or die "noop failed: $@\n";
+                $tag = $imap->idle or $logger->warn("idle failed: $@");
+                $retry--;
+            }
+            else {
+                $self->gracefully_end();
+                last POLLING;
+            }
+        }
+
+        if (ref($idlemsgs) eq 'ARRAY' && scalar @{$idlemsgs} > 0 ) {
+
+            unless ( $imap->done($tag) ) {
+                $logger->warn("Error from done: $@");
+                last POLLING;
+            }
+
+            $logger->debug("NEW emails! Analysing..");
+            my @msgids = $self->get_message_ids($idlemsgs);
+            my @rides  = $self->fetch_rides(\@msgids);
+            if (@rides) {
+                RIDE:
+                foreach my $ride (sort { $a->price <=> $b->price} @rides ) {
+
+                    # BLOCKER: criteria to accept!
+                    if (
+                       ( $ride->price && $ride->price > 100 )
+                       ||
+                         $ride->location_to =~ /schiphol/i
+                       ||
+                         $ride->location_from =~ /schiphol/i
+                       )
+                    {
+                        eval {
+
+                            #                            $self->play_music unless $self->is_test_mode;
+                            unless ($ride->status->code eq 'new') {
+                                $logger->info("no URL for ride %s");
+                                next RIDE;
+                            }
+                            my $status = $ride->apply;
+                            # BLOCKER Assume this means LOCKED_FOR_ME
+                            if ($status and $status->code eq 'locked_for_me') {
+                                $self->send_telegram(
+                                    sprintf "**BINGO A RIDE IS LOCKED** Date:[%s], Price:[%s], Van: [%s...], Naar: [%s...], ID: [%s], Link [%s]",
+                                    $ride->ride_dt,
+                                    $ride->price,
+                                    substr( $ride->location_from, 0, 50 ),
+                                    substr( $ride->location_to, 0, 50 ),
+                                    $ride->id,
+                                    $ride->url );
+                                #touch('/home/feyruz/sandbox/RideAway-AutoResponder/stop');
+                                # Crucially, don't provide $tag here because your idle is done.
+                                # $self->_disconnect;
+                                # last POLLING;
+                            }
+                        };
+                        if ($@) {
+                            $logger->warn("Apply failed [$@]");
+                            my $status_rs   = $self->schema->resultset('Status');
+                            my $status_fail = $status_rs->search( { code => 'failed' } )->single;
+                            $ride->update({ status => $status_fail });
+                        }
+                    }
+                    else {
+                        $logger->debug( sprintf('Does not look like a ride I would want: %s to %s, price:%s',
+                                            $ride->location_from,
+                                            $ride->location_to,
+                                            $ride->price
+                                        )
+                                      );
+                    }
+                }
+            }
+            unless ( $tag = $imap->idle ) {
+                $logger->error("couldnt get the tag: $@");
+                $self->_disconnect;
+                exit 1;
+            }
+        }
+
+        $logger->debug(sprintf "Polling %.2f", $seconds_to_go) if int(rand(100) >= 95);
+        sleep(0.1);
+        $seconds_to_go -= 0.105;
+    }
+    $self->_disconnect($tag);
+}
+
+sub _disconnect {
+    my ($self, $tag) = @_;
+
+    my $imap = $self->imap;
+    if ($tag) {
+        $imap->done($tag) or $logger->warn("Error from done: $@");
+    }
+    $imap->close;
+    $imap->disconnect;
+}
+
+sub fetch_rides {
+    my ( $self, $msgids ) = @_;
+
+    die 'no array ref of nums'
+        unless $msgids and ref $msgids eq 'ARRAY';
+
+    $logger->debug( sprintf "enter fetch_rides: msg ids [%s]",
+                        join ',', @{$msgids}
+                  );
+
+    my $imap = $self->imap;
+    my @rides;
+    foreach my $msg_id ( @{$msgids} ) {
+        my $body_string = $imap->body_string($msg_id)
+            or die "Could not body_string: $@\n";
+
+        my $body = $imap->Strip_cr($body_string);
+
+        if ( $self->is_a_ride_email($body) ) {
+            $logger->info( "Found a ride [$msg_id], I will try to create a ride object now");
+            my $ride = $self->make_ride( $body, $msg_id );
+            if ($ride) {
+                $logger->info( sprintf("Created ride with id [%s] for msgid [%s]", $ride->id, $msg_id) );
+                push @rides, $ride;
+            }
+            else {
+                $logger->error( "Failed to create the ride object for [$msg_id]" );
+            }
+        }
+        else {
+            $logger->info( "Email $msg_id has been analysed but doesn't look like a Ride");
+        }
+    }
+    return @rides;
+}
+
+sub is_a_ride_email {
+    my ( $self, $email_body ) = @_;
+
+    die 'havent received any email body string'
+        unless $email_body;
+
+    if ($email_body =~ /Bekijk hier de reservering/ms) {
+        $logger->warn( "Looks like a 'Bekijk hier de reservering email, skipping" );
+        return undef;
+    }
+
+    return 1 if $email_body =~ /Er is een nieuwe boeking toegevoegd aan de rittenlijst/g;
+
+    return undef;
+}
+
+sub _parse_non_html {
+    my ($self, $body) = @_;
+
+    $body = decode_qp($body);
+    my ($van,
+        $naar,
+        $prijs,
+        $datum,
+        $url,
+    );
+    my ($is_retour_reis) = $body =~ /(Type reis:Retour reis)/ms;
+    ($url)          = $body =~ /.+href="(https.+?)">ACCEPTEER.+/ms;
+    ($van, $naar)   = $body =~ /\d+Van:\s*(.+?)Naar:\s*(.+?)Aantal/ms;
+    ($prijs)        = $body =~ /Totaalprijs:.+?EUR (\d+)/ms;
+    ($datum)        = $body =~ /Ophaaldatum.+?:\D*(.+?)(Datum|\s*Type)/ms;
+    if (!$datum) {
+        ($datum) = $body =~ /Datum en tijd van aankomst:\s*(.+?)(Datum|\s*Type)/ms;
+    }
+    #    else {
+    #        # ($van)   = $body =~ /\*Van:\*\s*(.+?)(?:\r\n?|\n)/m;
+    #        ($van, $naar)   = $body =~ /\d+Van:\s*(.+?)Naar:\s*(.+?)Aantal/ms;
+    #        ($naar)  = $body =~ /\*Naar:\*\s*(.+?)(?:\r\n?|\n)/m;
+    #        ($prijs) = $body =~ /^EUR\s*(.+?)(?:\r\n?|\n)/m;
+    #        ($datum) = $body =~ /\*Ophaaldatum en tijdstip:\*\s*(.+?)(?:\r\n?|\n)/m;
+    #        ($url)   = $body =~ /^ACCEPTEER(.+?\>)/ms;
+    #    }
+
+    $url =~ s/(?:\r\n?|\n|>|<)//g if $url;
+
+    return { ride_dt       => $self->_parse_date($datum),
+             location_from => $van   || ' ',
+             location_to   => $naar  || ' ',
+             url           => $url,
+             price         => $prijs || -1, };
+
+}
+
+sub _parse_html {
+    my ($self, $body) = @_;
+    # href="https://www.example.com/partner/?entity=4917&token=cb2552e7ddadfdfdfd83230dcba0881f728&url=booking|308401|81b992877bff192c09d5eb55bfb2cf9b">ACCEPTEER
+    my ($url)                = $body =~ /.*(https:\/\/.+?)">ACCEPTEER/ms;
+    my ($van, $naar, $datum) = $body =~ /.*?Boekingsnummer:.+?Van:\s*(.+?)Naar:\s*(.+?)Aantal.+?tijdstip:(.+?)\s*Type vervoer/msi;
+    my ($prijs)              = $body =~ /.*?U ontvangt:EUR (\d+)/msi;
+
+    unless ($url) {
+        $logger->debug("no url could be parsed!");
+        return undef;
+    }
+
+    if ($url =~ /=3D/) {
+        $logger->debug("wont do HTML parse as I see =3D in the parsed URL, probably quoted-printable!");
+        return undef;
+    }
+
+
+    return { ride_dt       => $self->_parse_date($datum),
+             location_from => $van || 'VOID',
+             location_to   => $naar || 'VOID',
+             url           => $url,
+             price         => $prijs || -1, };
+}
+
+sub make_ride {
+    my ($self, $email_body, $msg_id) = @_;
+
+    die 'havent received any email body string'
+        unless $email_body;
+
+    my $rs          = $self->schema->resultset('Ride');
+    my $status_rs   = $self->schema->resultset('Status');
+    my $status_new  = $status_rs->search( { code => 'new' } )->single;
+    my $status_fail = $status_rs->search( { code => 'failed' } )->single;
+
+    # first attempt
+    $logger->debug("Trying html parser!");
+    my $data = $self->_parse_html($email_body);
+
+    # second attempt
+    if (not $data) {
+        $logger->debug("got no parser results, will try  NON html parser!");
+        $data = $self->_parse_non_html($email_body);
+    }
+
+    my $ride;
+    eval {
+        $ride = $rs->create(
+           {
+             %{ $data },
+             created_dt => DateTime->now(time_zone => "Europe/London"),
+             raw_email  => $email_body,
+             num_people => -1,
+             sms_sent => 0,
+             status => $status_new,
+             msgid => $msg_id
+            }
+        );
+    };
+    if (my $err = $@) {
+        $rs->create(
+           {
+             created_dt => DateTime->now(time_zone => "Europe/London"),
+             ride_dt    => DateTime->now(time_zone => "Europe/London"),
+             location_from => 'unknown location' . rand(10),
+             raw_email  => $email_body,
+             status => $status_fail,
+             msgid => $msg_id
+            } );
+
+        $logger->error(sprintf "error parsing email body: [%s] [%s]", $err, $email_body)
+            unless $self->is_test_mode;
+        return undef;
+    }
+    return $ride;
+}
+
+sub _parse_date {
+    my ( $self, $dutch_date ) = @_;
+    my $dt;
+    eval {
+        # $dutch_date: expect something like this:
+        # '28 Maart 2018 10:30',
+        my %month_of = (
+                         JANUARI   => 1,
+                         FEBRUARI  => 2,
+                         MAART     => 3,
+                         APRIL     => 4,
+                         MEI       => 5,
+                         JUNI      => 6,
+                         JULI      => 7,
+                         AUGUSTUS  => 8,
+                         SEPTEMBER => 9,
+                         OKTOBER   => 10,
+                         NOVEMBER  => 11,
+                         DECEMBER  => 12,
+                       );
+
+        my ($day, $maand, $year, $time) = split(/\s+/, $dutch_date);
+        my $month_nr = $month_of{uc($maand)};
+        my ($hour, $minute) = split(':', $time);
+        $dt = DateTime->new(
+                   year => $year,
+                   month => $month_nr,
+                   day => $day,
+                   hour => $hour,
+                   minute => $minute,
+               );
+    };
+    if (my $err = $@) {
+        $logger->error("couldnt parse date returning current date");
+        $dt = DateTime->now(time_zone => "Europe/London");
+    }
+
+    return $dt;
+}
+
+sub get_message_ids {
+    my ($self, $idlemsgs) = @_;
+    $logger->debug(sprintf 'enter get_message_ids, idlemsgs:[%s]', join ',', @{$idlemsgs});
+    my @ids;
+    foreach my $msg (@{$idlemsgs}) {
+        if (my ($id) = $msg =~ /\b([0-9]+) EXISTS/) {
+            push @ids, $id;
+        }
+    }
+    return @ids;
+}
+
+sub gracefully_end {
+    my ($self) = @_;
+
+    my $imap = $self->imap;
+    $imap->close;
+    $imap->disconnect;
+
+}
+
+__PACKAGE__->meta->make_immutable;
