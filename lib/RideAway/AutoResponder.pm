@@ -200,25 +200,6 @@ sub _build_imap {
     return $client;
 }
 
-has 'beeper' => (
-    is => 'ro',
-    lazy => 1,
-    default => sub { Audio::Beep->new } ,
-);
-
-has 'music' => (
-    is => 'rw',
-    lazy => 1,
-    default => sub {
-        my $music = <<'EOM'; # a Smashing Pumpkins tune
-\bpm250 \norel \transpose''
-    d8 a, e a, d a, fis16 d a,8
-    d  a, e a, d a, fis16 d a,8
-EOM
-        return $music;
-    },
-);
-
 has poll_seconds => (
     is            => 'ro',
     isa           => 'Num',
@@ -234,13 +215,6 @@ has is_test_mode => (
 );
 
 =head1 METHODS
-
-=cut
-
-
-sub play_music {
-    beep(550, 500);
-}
 
 =head2 run
 
@@ -314,7 +288,6 @@ sub run {
                     {
                         eval {
 
-                            #                            $self->play_music unless $self->is_test_mode;
                             unless ($ride->status->code eq 'new') {
                                 $logger->info("no URL for ride %s");
                                 next RIDE;
@@ -330,10 +303,16 @@ sub run {
                                     substr( $ride->location_to, 0, 50 ),
                                     $ride->id,
                                     $ride->url );
-                                #touch('/home/feyruz/sandbox/RideAway-AutoResponder/stop');
-                                # Crucially, don't provide $tag here because your idle is done.
-                                # $self->_disconnect;
-                                # last POLLING;
+                            }
+                            else {
+                                if (!$self->is_test_mode) {
+                                    $self->send_telegram(
+                                        sprintf "Applied for a ride but didnt get it. Status: [%s], Van: [%s...]",
+                                            $ride->status->code,
+                                            substr( $ride->location_from, 0, 50
+                                        )
+                                    );
+                                }
                             }
                         };
                         if ($@) {
@@ -351,7 +330,7 @@ sub run {
                                         )
                                       );
                     }
-                    $seconds_to_go -= 5; # to make for the time spent
+                    $seconds_to_go -= 5 unless $self->is_test_mode; # to make for the time spent
                 }
             }
             unless ( $tag = $imap->idle ) {
