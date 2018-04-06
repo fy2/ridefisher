@@ -249,27 +249,21 @@ sub play_music {
 sub run {
     my ($self) = @_;
 
-
-
     $logger->debug('Enter run');
     my $start_time  = DateTime->now(time_zone => "Europe/London");
 
     my $imap = $self->imap;
 
-    $imap->select("Inbox");
+    $imap->select("Inbox") or $logger->logdie("Could not select Inbox: $@");
     my $tag;
     unless ( $tag = $imap->idle ) {
-        $logger->("couldnt get the tag $@");
+        $logger->error("couldnt get the tag $@");
         $self->gracefully_end();
         exit;
     }
     $logger->debug("idling...");
 
     my $seconds_to_go =  $self->poll_seconds;
-    #$self->send_telegram(sprintf "I will keep an eye on new rides for you. Polling [%s], At: [%s]"
-    #                        , $seconds_to_go
-    #                        , $start_time
-    #                   );
     $logger->debug("Gonna poll for $seconds_to_go seconds!");
 
     my $retry = 3;
@@ -284,9 +278,9 @@ sub run {
         # see if this is a disconnect:
         if (my $err = $@) {
             if ($retry > 0 ) {
-                $logger->warn("idle_data error: $err. I will retry connecting...");
-                $imap->noop or $imap->reconnect or die "noop failed: $@\n";
-                $tag = $imap->idle or $logger->warn("idle failed: $@");
+                $logger->error("idle_data error: $err. I will retry connecting...");
+                $imap->noop or $imap->reconnect or $logger->logdie("noop failed: $@");
+                $tag = $imap->idle or $logger->error("idle failed: $@");
                 $retry--;
             }
             else {
@@ -298,7 +292,7 @@ sub run {
         if (ref($idlemsgs) eq 'ARRAY' && scalar @{$idlemsgs} > 0 ) {
 
             unless ( $imap->done($tag) ) {
-                $logger->warn("Error from done: $@");
+                $logger->error("Error from done: $@");
                 last POLLING;
             }
 
@@ -343,7 +337,7 @@ sub run {
                             }
                         };
                         if ($@) {
-                            $logger->warn("Apply failed [$@]");
+                            $logger->error("Apply failed [$@]");
                             my $status_rs   = $self->schema->resultset('Status');
                             my $status_fail = $status_rs->search( { code => 'failed' } )->single;
                             $ride->update({ status => $status_fail });
@@ -378,7 +372,7 @@ sub _disconnect {
 
     my $imap = $self->imap;
     if ($tag) {
-        $imap->done($tag) or $logger->warn("Error from done: $@");
+        $imap->done($tag) or $logger->error("Error from done: $@");
     }
     $imap->close;
     $imap->disconnect;
@@ -427,7 +421,7 @@ sub is_a_ride_email {
         unless $email_body;
 
     if ($email_body =~ /Bekijk hier de reservering/ms) {
-        $logger->warn( "Looks like a 'Bekijk hier de reservering email, skipping" );
+        $logger->info( "'Bekijk hier de reservering', skipping" );
         return undef;
     }
 
@@ -465,7 +459,6 @@ sub _parse_non_html {
 
 sub _parse_html {
     my ($self, $body) = @_;
-    # href="https://www.example.com/partner/?entity=4917&token=cb2552e7ddadfdfdfd83230dcba0881f728&url=booking|308401|81b992877bff192c09d5eb55bfb2cf9b">ACCEPTEER
     my ($url)                = $body =~ /.*(https:\/\/.+?)">ACCEPTEER/ms;
     my ($van, $naar, $datum) = $body =~ /.*?Boekingsnummer:.+?Van:\s*(.+?)Naar:\s*(.+?)Aantal.+?tijdstip:(.+?)\s*Type vervoer/msi;
     my ($prijs)              = $body =~ /.*?U ontvangt:EUR (\d+)/msi;
@@ -595,10 +588,10 @@ sub get_message_ids {
 sub gracefully_end {
     my ($self) = @_;
 
+    $logger->debug('graceful disconnect request is being carried out now');
     my $imap = $self->imap;
     $imap->close;
     $imap->disconnect;
-
 }
 
 __PACKAGE__->meta->make_immutable;
