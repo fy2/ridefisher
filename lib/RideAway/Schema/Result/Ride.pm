@@ -240,16 +240,16 @@ sub _analyse {
     }
     elsif ($decoded_content =~ /boeking is al door iemand anders opgepakt/ms ) {
         $status = $status_rs->search( { code => 'rejected' } )->single;
-        $logger->info(sprintf 'Taken by someone else! - [%s, %s]!', $self->created_dt, $self->id);
+        $logger->info(sprintf 'Bad luck! Ride is taken by someone else! - [%s, %s]!', $self->created_dt, $self->id);
     }
     elsif ($decoded_content =~ /dit moment vergrendeld door een andere partner./ms ) {
         $status = $status_rs->search( { code => 'locked_for_others' } )->single;
-        $logger->info(sprintf 'locked for others - [%s, %s]!', $self->created_dt, $self->id);
+        $logger->info(sprintf 'Arghh. Ride is locked for others - [%s, %s]!', $self->created_dt, $self->id);
     }
     else {
         $status = $status_rs->search( { code => 'unknown' } )->single;
         $logger->info(
-            sprintf 'This ride might be OURS! Not sure about its status! - [%s, %s]!',
+            sprintf 'Automated analysis could not reveal the response, rife for manual analysis + test? - [%s, %s]!',
                 $self->created_dt,
                 $self->id
         );
@@ -263,10 +263,10 @@ sub _get_decoded_content {
 
     my $mech = WWW::Mechanize->new();
     $mech->agent_alias( 'Mac Safari' );
-    $logger->info(sprintf '!APPLYING! - [%s, %s, %s]!', $self->created_dt, $self->id, $self->url );
+    $logger->info(sprintf 'I am APPLYING for this ride - [%s, %s, %s]!', $self->created_dt, $self->id, $self->url );
     my $http_response = $mech->get($self->url);
     my $decoded = $http_response->decoded_content;
-    $logger->info(sprintf 'Mechanize status: [%s]', $mech->status);
+    $logger->info(sprintf 'Mechanize HTTP response code: [%s]', $mech->status);
     return $decoded;
 }
 

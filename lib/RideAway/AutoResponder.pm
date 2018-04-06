@@ -344,7 +344,7 @@ sub run {
                         }
                     }
                     else {
-                        $logger->debug( sprintf('Does not look like a ride I would want: %s to %s, price:%s',
+                        $logger->info( sprintf('The ride did not meet our criteria: Van: [%s], Naar: [%s], price: [%s]',
                                             $ride->location_from,
                                             $ride->location_to,
                                             $ride->price
@@ -464,12 +464,12 @@ sub _parse_html {
     my ($prijs)              = $body =~ /.*?U ontvangt:EUR (\d+)/msi;
 
     unless ($url) {
-        $logger->debug("no url could be parsed!");
+        $logger->info("no url could be parsed!");
         return undef;
     }
 
     if ($url =~ /=3D/) {
-        $logger->debug("wont do HTML parse as I see =3D in the parsed URL, probably quoted-printable!");
+        $logger->info("wont do HTML parse as I see =3D in the parsed URL, probably quoted-printable!");
         return undef;
     }
 
@@ -493,11 +493,11 @@ sub make_ride {
     my $status_fail = $status_rs->search( { code => 'failed' } )->single;
 
     # first attempt
-    $logger->debug("Trying NON html parser!");
+    $logger->info("Parsing the email...");
     my $data = $self->_parse_non_html($email_body);
 
     if (not $data) {
-        $logger->debug("got no parser results, will try HTML parser!");
+        $logger->debug("Parsing failed. I will try another parser...");
         $data = $self->_parse_html($email_body);
     }
 
