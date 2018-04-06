@@ -1,4 +1,5 @@
 imap.output
+*.bak
 crontab.out
 mech.pl
 config.live.ini
