@@ -258,16 +258,18 @@ sub _analyse {
     return $status;
 }
 
-sub _get_decoded_content {
-    my $self = shift;
-
+{
     my $mech = WWW::Mechanize->new();
     $mech->agent_alias( 'Mac Safari' );
-    $logger->info(sprintf 'I am APPLYING for this ride - [%s, %s, %s]!', $self->created_dt, $self->id, $self->url );
-    my $http_response = $mech->get($self->url);
-    my $decoded = $http_response->decoded_content;
-    $logger->info(sprintf 'Mechanize HTTP response code: [%s]', $mech->status);
-    return $decoded;
+    sub _get_decoded_content {
+        my $self = shift;
+
+        $logger->info(sprintf 'I am APPLYING for this ride - [%s, %s, %s]!', $self->created_dt, $self->id, $self->url );
+        my $http_response = $mech->get($self->url);
+        my $decoded = $http_response->decoded_content;
+       $logger->info(sprintf 'Mechanize HTTP response code: [%s]', $mech->status);
+       return $decoded;
+    }
 }
 
 1;

@@ -304,12 +304,12 @@ sub run {
                 foreach my $ride (sort { $a->price <=> $b->price} @rides ) {
 
                     # BLOCKER: criteria to accept!
-                    if (
-                       ( $ride->price && $ride->price > 100 )
-                       ||
-                         $ride->location_to =~ /schiphol/i
-                       ||
-                         $ride->location_from =~ /schiphol/i
+                    if (1
+                       #( $ride->price && $ride->price > 100 )
+                       #||
+                       #  $ride->location_to =~ /schiphol/i
+                       #||
+                       #  $ride->location_from =~ /schiphol/i
                        )
                     {
                         eval {
@@ -351,6 +351,7 @@ sub run {
                                         )
                                       );
                     }
+		    $seconds_to_go -= 5; # to make for the time spent
                 }
             }
             unless ( $tag = $imap->idle ) {
@@ -360,9 +361,9 @@ sub run {
             }
         }
 
-        $logger->debug(sprintf "Polling %.2f", $seconds_to_go) if int(rand(100) >= 95);
-        sleep(0.05);
-        $seconds_to_go -= 0.051;
+        $logger->debug(sprintf "Polling %.2f", $seconds_to_go) if int(rand(1000) >= 990);
+        sleep(0.01);
+        $seconds_to_go -= 0.01;
     }
     $self->_disconnect($tag);
 }
