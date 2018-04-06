@@ -279,12 +279,12 @@ sub run {
                 next RIDE unless $ride->status->code eq 'new';
 
                 # BLOCKER: criteria to accept!
-                if (1
-                   #( $ride->price && $ride->price > 100 )
-                   #||
-                   #  $ride->location_to =~ /schiphol/i
-                   #||
-                   #  $ride->location_from =~ /schiphol/i
+                if (
+                   ( $ride->price && $ride->price > 80 )
+                   ||
+                     $ride->location_to =~ /schiphol/i
+                   ||
+                     $ride->location_from =~ /schiphol/i
                    )
                 {
                     eval {
@@ -316,7 +316,7 @@ sub run {
                     }
                 }
                 else {
-                    $logger->info( sprintf('The ride did not meet our criteria: Van: [%s], Naar: [%s], price: [%s]',
+                    $logger->info( sprintf('We have rejected a ride. It did not meet our minimum criteria for price or location: Van: [%s], Naar: [%s], price: [%s]',
                                         $ride->location_from,
                                         $ride->location_to,
                                         $ride->price
