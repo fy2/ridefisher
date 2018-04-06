@@ -188,6 +188,7 @@ sub test_fetch_rides : Test(3) {
         sub {
             my $ride = Test::MockObject->new;
             $ride->set_isa('RideAway::Schema::Result::Ride');
+            $ride->mock('id', sub { 1 } );
             return $ride;
         }
     );
@@ -238,12 +239,11 @@ sub test_make_ride : Test(no_plan) {
     qr/havent received any email body string/, 'error ok';
 
     my $msgid = 123;
-    my $ride = $rd->make_ride( $self->{sample_email_html_body}, $msgid );
-    is( ref($ride), 'RideAway::Schema::Result::Ride' );
+    my $struct = $rd->_parse_html( $self->{sample_email_html_body} );
 
     cmp_deeply(
-        $ride,
-        methods(
+        $struct,
+        {
             location_from => 'Camping Het Amsterdamse Bos, Kleine Noorddijk, Amstelveen, Niederlande',
             location_to   => 'AMS: Amsterdam Airport Schiphol&nbsp;',
             price         => '29',
@@ -256,18 +256,13 @@ sub test_make_ride : Test(no_plan) {
                         year  => 2018,
                     ),
                 ),
-            num_people => -1,
-            msgid      => $msgid,
-            sms_sent   => 0,
-            created_dt => isa('DateTime'),
-            status     => methods( code => 'new' ),
             url        => 'https://www.example.com/partner/?entity=4917&token=cb2552e7ddade0383230dcba0881f728&url=booking|308401|81b992877bff192c09d5eb55bfb2cf9b'
-        )
+        }
         , 'HTML parse ok'
 
     );
 
-    $ride = $rd->make_ride( $self->{sample_email_retour_qp_body}, $msgid );
+    my $ride = $rd->make_ride( $self->{sample_email_retour_qp_body}, $msgid );
     is( ref($ride), 'RideAway::Schema::Result::Ride' );
 
     cmp_deeply(
@@ -322,7 +317,6 @@ sub test_make_ride : Test(no_plan) {
         , 'NON HTML parse single reis ok'
     );
 
-    $DB::single=1;
     $ride = $rd->make_ride( $self->{sample_email_single_v2_qp_body}, $msgid );
     is( ref($ride), 'RideAway::Schema::Result::Ride' );
     cmp_deeply(

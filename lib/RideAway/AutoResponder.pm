@@ -367,8 +367,8 @@ sub run {
         }
 
         $logger->debug(sprintf "Polling %.2f", $seconds_to_go) if int(rand(100) >= 95);
-        sleep(0.1);
-        $seconds_to_go -= 0.105;
+        sleep(0.05);
+        $seconds_to_go -= 0.051;
     }
     $self->_disconnect($tag);
 }
@@ -454,15 +454,6 @@ sub _parse_non_html {
     if (!$datum) {
         ($datum) = $body =~ /Datum en tijd van aankomst:\s*(.+?)(Datum|\s*Type)/ms;
     }
-    #    else {
-    #        # ($van)   = $body =~ /\*Van:\*\s*(.+?)(?:\r\n?|\n)/m;
-    #        ($van, $naar)   = $body =~ /\d+Van:\s*(.+?)Naar:\s*(.+?)Aantal/ms;
-    #        ($naar)  = $body =~ /\*Naar:\*\s*(.+?)(?:\r\n?|\n)/m;
-    #        ($prijs) = $body =~ /^EUR\s*(.+?)(?:\r\n?|\n)/m;
-    #        ($datum) = $body =~ /\*Ophaaldatum en tijdstip:\*\s*(.+?)(?:\r\n?|\n)/m;
-    #        ($url)   = $body =~ /^ACCEPTEER(.+?\>)/ms;
-    #    }
-
     $url =~ s/(?:\r\n?|\n|>|<)//g if $url;
 
     return { ride_dt       => $self->_parse_date($datum),
@@ -470,7 +461,6 @@ sub _parse_non_html {
              location_to   => $naar  || ' ',
              url           => $url,
              price         => $prijs || -1, };
-
 }
 
 sub _parse_html {
@@ -510,13 +500,12 @@ sub make_ride {
     my $status_fail = $status_rs->search( { code => 'failed' } )->single;
 
     # first attempt
-    $logger->debug("Trying html parser!");
-    my $data = $self->_parse_html($email_body);
+    $logger->debug("Trying NON html parser!");
+    my $data = $self->_parse_non_html($email_body);
 
-    # second attempt
     if (not $data) {
-        $logger->debug("got no parser results, will try  NON html parser!");
-        $data = $self->_parse_non_html($email_body);
+        $logger->debug("got no parser results, will try HTML parser!");
+        $data = $self->_parse_html($email_body);
     }
 
     my $ride;
