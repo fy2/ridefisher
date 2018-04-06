@@ -79,6 +79,7 @@ sub _build_telegram {
 
 sub send_telegram {
     my ($self, $message) = @_;
+    return if $self->is_test_mode;
     eval {
         $self->telegram->sendMessage ({
             chat_id => $self->telegram_chat_id,
@@ -273,65 +274,56 @@ sub run {
             $logger->debug("NEW emails! Analysing..");
             my @msgids = $self->get_message_ids($idlemsgs);
             my @rides  = $self->fetch_rides(\@msgids);
-            if (@rides) {
-                RIDE:
-                foreach my $ride (sort { $a->price <=> $b->price} @rides ) {
+            RIDE: foreach my $ride ( @rides ) {
 
-                    # BLOCKER: criteria to accept!
-                    if (1
-                       #( $ride->price && $ride->price > 100 )
-                       #||
-                       #  $ride->location_to =~ /schiphol/i
-                       #||
-                       #  $ride->location_from =~ /schiphol/i
-                       )
-                    {
-                        eval {
+                next RIDE unless $ride->status->code eq 'new';
 
-                            unless ($ride->status->code eq 'new') {
-                                $logger->info("no URL for ride %s");
-                                next RIDE;
-                            }
-                            my $status = $ride->apply;
-                            # BLOCKER Assume this means LOCKED_FOR_ME
-                            if ($status and $status->code eq 'locked_for_me') {
-                                $self->send_telegram(
-                                    sprintf "**BINGO A RIDE IS LOCKED** Date:[%s], Price:[%s], Van: [%s...], Naar: [%s...], ID: [%s], Link [%s]",
-                                    $ride->ride_dt,
-                                    $ride->price,
-                                    substr( $ride->location_from, 0, 50 ),
-                                    substr( $ride->location_to, 0, 50 ),
-                                    $ride->id,
-                                    $ride->url );
-                            }
-                            else {
-                                if (!$self->is_test_mode) {
-                                    $self->send_telegram(
-                                        sprintf "Applied for a ride but didnt get it. Status: [%s], Van: [%s...]",
-                                            $ride->status->code,
-                                            substr( $ride->location_from, 0, 50
-                                        )
-                                    );
-                                }
-                            }
-                        };
-                        if ($@) {
-                            $logger->error("Apply failed [$@]");
-                            my $status_rs   = $self->schema->resultset('Status');
-                            my $status_fail = $status_rs->search( { code => 'failed' } )->single;
-                            $ride->update({ status => $status_fail });
+                # BLOCKER: criteria to accept!
+                if (1
+                   #( $ride->price && $ride->price > 100 )
+                   #||
+                   #  $ride->location_to =~ /schiphol/i
+                   #||
+                   #  $ride->location_from =~ /schiphol/i
+                   )
+                {
+                    eval {
+                        my $status = $ride->apply;
+                        # BLOCKER Assume this means LOCKED_FOR_ME
+                        if ($status and $status->code eq 'locked_for_me') {
+                            $self->send_telegram(
+                                sprintf "**BINGO A RIDE IS LOCKED** Date:[%s], Price:[%s], Van: [%s...], Naar: [%s...], ID: [%s], Link [%s]",
+                                $ride->ride_dt,
+                                $ride->price,
+                                substr( $ride->location_from, 0, 50 ),
+                                substr( $ride->location_to, 0, 50 ),
+                                $ride->id,
+                                $ride->url );
                         }
+                        else {
+                            $self->send_telegram(
+                                sprintf "Applied for a ride but didnt get it. Status: [%s], Van: [%s...]",
+                                    $ride->status->code,
+                                    substr( $ride->location_from, 0, 50 )
+                            );
+                        }
+                    };
+                    if ($@) {
+                        $logger->error("Apply failed [$@]");
+                        my $status_rs   = $self->schema->resultset('Status');
+                        my $status_fail = $status_rs->search( { code => 'failed' } )->single;
+                        $ride->update({ status => $status_fail });
                     }
-                    else {
-                        $logger->info( sprintf('The ride did not meet our criteria: Van: [%s], Naar: [%s], price: [%s]',
-                                            $ride->location_from,
-                                            $ride->location_to,
-                                            $ride->price
-                                        )
-                                      );
-                    }
-                    $seconds_to_go -= 5 unless $self->is_test_mode; # to make for the time spent
                 }
+                else {
+                    $logger->info( sprintf('The ride did not meet our criteria: Van: [%s], Naar: [%s], price: [%s]',
+                                        $ride->location_from,
+                                        $ride->location_to,
+                                        $ride->price
+                                    )
+                                  );
+                }
+                $seconds_to_go -= 5 unless $self->is_test_mode; # to make for the time spent
             }
             unless ( $tag = $imap->idle ) {
                 $logger->error("couldnt get the tag: $@");
