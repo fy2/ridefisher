@@ -351,7 +351,7 @@ sub run {
                                         )
                                       );
                     }
-		    $seconds_to_go -= 5; # to make for the time spent
+                    $seconds_to_go -= 5; # to make for the time spent
                 }
             }
             unless ( $tag = $imap->idle ) {
