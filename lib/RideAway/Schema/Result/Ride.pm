@@ -263,7 +263,7 @@ sub _analyse {
     $easy->setopt( CURLOPT_COOKIEJAR,  '/tmp/cookies.txt');
     $easy->setopt( CURLOPT_COOKIEFILE, '/tmp/cookies.txt' );
     $easy->setopt( CURLOPT_FOLLOWLOCATION, 1);
-    $easy->setopt( CURLOPT_PROXY_SSL_VERIFYHOST, 0);
+    $easy->setopt( CURLOPT_SSL_VERIFYHOST, 0);
     $easy->setopt( CURLOPT_TIMEOUT, 30);
     $easy->setopt( CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30" );
 
