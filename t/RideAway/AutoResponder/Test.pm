@@ -24,7 +24,7 @@ sub rideaway_test_startup : Test(startup) {
     $self->{sample_email_html_body}      = read_file( "$Bin/../t/data/sample_ride_html.txt", binmode => ':utf8' );
     $self->{sample_email_retour_qp_body} = read_file( "$Bin/../t/data/sample_retour_ride_qp.txt", binmode => ':utf8' );
     $self->{sample_email_single_qp_body} = read_file( "$Bin/../t/data/sample_single_ride_qp.txt", binmode => ':utf8' );
-    $self->{sample_email_single_v2_qp_body}      = read_file( "$Bin/../t/data/sample_sample_ride_formatv2_qp.txt", binmode => ':utf8' );
+    $self->{sample_email_single_v2_qp_body} = read_file( "$Bin/../t/data/sample_sample_ride_formatv2_qp.txt", binmode => ':utf8' );
     $self->{sample_afwijzing}            = read_file( "$Bin/../t/data/sample_afwijzing.html", binmode => ':utf8' );
     $self->{sample_locked_for_others}    = read_file( "$Bin/../t/data/sample_locked_for_others.html", binmode => ':utf8' );
     $self->{sample_locked_for_me}        = read_file( "$Bin/../t/data/sample_locked_for_me.html", binmode => ':utf8' );
@@ -396,13 +396,6 @@ sub test_applying : Test(no_plan) {
 
             is($ride->status->code, 'locked_for_me', 'decoded content indicated ride is locked for me');
         };
-
-        #        # locked for me
-        #        is( $ride->status->code, 'locked_for_me', 'locked_for_me');
-        #
-        #        # locked for someone else
-        #        is( $ride->status->code, 'locked_for_others', 'locked for others');
-
     };
 }
 
@@ -423,11 +416,24 @@ sub test_database_storage : Test(no_plan) {
         is( $rs->count, 1, 'found the row' );
     };
 
-
     $ride = $rd->make_ride( $self->{sample_email_single_qp_body} );
     is( $ride, undef, 'should be allowed to make the same ride twice');
+}
 
+sub test__get_decoded_content : Test(no_plan) {
+    my $self = shift;
+    my $ride = $self->_make_ride;
 
+    my $decoded;
+    lives_ok { $decoded = $ride->_get_decoded_content } '_get_decoded_content lives';
+
+    # Default URL in $ride is https://example.com, so we expect some string
+    # like this in the response:
+    like(
+        $decoded,
+        qr/This domain is established to be used.+/ms,
+        'decoded content is like example.com (this test requires internet conn.)'
+    );
 }
 
 sub _mock_imap {
@@ -458,7 +464,7 @@ sub _make_ride {
             location_from => 'schiphol',
             location_to => 'amsterdam',
             num_people => 2,
-            url => 'http://www.example.com',
+            url => 'https://www.example.com',
             msgid => 12345,
             price => 10.5,
             sms_sent => 0,

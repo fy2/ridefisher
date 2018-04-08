@@ -271,7 +271,7 @@ sub run {
                 last POLLING;
             }
 
-            $logger->debug("NEW emails! Analysing..");
+            #            $logger->debug("NEW emails! Analysing..");
             my @msgids = $self->get_message_ids($idlemsgs);
             my @rides  = $self->fetch_rides(\@msgids);
             RIDE: foreach my $ride ( @rides ) {
@@ -356,9 +356,7 @@ sub fetch_rides {
     die 'no array ref of nums'
         unless $msgids and ref $msgids eq 'ARRAY';
 
-    $logger->debug( sprintf "enter fetch_rides: msg ids [%s]",
-                        join ',', @{$msgids}
-                  );
+    $logger->debug( sprintf "enter fetch_rides: msg ids [%s]", join ',', @{$msgids} );
 
     my $imap = $self->imap;
     my @rides;
@@ -369,10 +367,10 @@ sub fetch_rides {
         my $body = $imap->Strip_cr($body_string);
 
         if ( $self->is_a_ride_email($body) ) {
-            $logger->info( "Found a ride [$msg_id], I will try to create a ride object now");
+            #  $logger->info( "Found a ride [$msg_id], I will try to create a ride object now");
             my $ride = $self->make_ride( $body, $msg_id );
             if ($ride) {
-                $logger->info( sprintf("Created ride with id [%s] for msgid [%s]", $ride->id, $msg_id) );
+                #   $logger->info( sprintf("Created ride with id [%s] for msgid [%s]", $ride->id, $msg_id) );
                 push @rides, $ride;
             }
             else {
@@ -389,7 +387,7 @@ sub fetch_rides {
 sub is_a_ride_email {
     my ( $self, $email_body ) = @_;
 
-    die 'havent received any email body string'
+    $logger->logdie('havent received any email body string')
         unless $email_body;
 
     if ($email_body =~ /Bekijk hier de reservering/ms) {
@@ -456,7 +454,7 @@ sub _parse_html {
 sub make_ride {
     my ($self, $email_body, $msg_id) = @_;
 
-    die 'havent received any email body string'
+    $logger->logdie('havent received any email body string')
         unless $email_body;
 
     my $rs          = $self->schema->resultset('Ride');
@@ -465,7 +463,7 @@ sub make_ride {
     my $status_fail = $status_rs->search( { code => 'failed' } )->single;
 
     # first attempt
-    $logger->info("Parsing the email...");
+    # $logger->info("Parsing the email...");
     my $data = $self->_parse_non_html($email_body);
 
     if (not $data) {

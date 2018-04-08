@@ -191,7 +191,7 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07049 @ 2018-03-26 12:40:14
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pwXlts0GjeN9DYU8iuQLbQ
 
-use WWW::Mechanize;
+use Net::Curl::Easy qw(:constants);
 use DateTime;
 use Log::Log4perl;
 my $logger = Log::Log4perl::get_logger();
@@ -229,8 +229,7 @@ sub apply {
 sub _analyse {
     my ($self, $decoded_content) = @_;
 
-    $logger->warn('No decoded content here') unless $decoded_content;
-    die 'No content' unless $decoded_content;
+    $logger->logdie('No decoded content here') unless $decoded_content;
 
     my $status;
     my $status_rs = $self->result_source->schema->resultset('Status');
@@ -259,16 +258,25 @@ sub _analyse {
 }
 
 {
-    my $mech = WWW::Mechanize->new();
-    $mech->agent_alias( 'Mac Safari' );
+
+    my $easy = Net::Curl::Easy->new();
+    $easy->setopt( CURLOPT_COOKIEJAR,  '/tmp/cookies.txt');
+    $easy->setopt( CURLOPT_COOKIEFILE, '/tmp/cookies.txt' );
+    $easy->setopt( CURLOPT_FOLLOWLOCATION, 1);
+    $easy->setopt( CURLOPT_PROXY_SSL_VERIFYHOST, 0);
+    $easy->setopt( CURLOPT_TIMEOUT, 30);
+    $easy->setopt( CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.112 Safari/534.30" );
+
     sub _get_decoded_content {
         my $self = shift;
 
-        $logger->info(sprintf 'I am APPLYING for this ride - [%s, %s, %s]!', $self->created_dt, $self->id, $self->url );
-        my $http_response = $mech->get($self->url);
-        my $decoded = $http_response->decoded_content;
-       $logger->info(sprintf 'Mechanize HTTP response code: [%s]', $mech->status);
-       return $decoded;
+        my $decoded = '';
+        $easy->setopt( CURLOPT_FILE, \$decoded);
+        $easy->setopt( CURLOPT_URL, $self->url );
+        $easy->perform();
+
+        $logger->info(sprintf 'APPLIED for ride - [%s, %s, %s]!', $self->created_dt, $self->id, $self->url );
+        return $decoded;
     }
 }
 
