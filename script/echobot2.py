@@ -44,7 +44,7 @@ def start(bot, update):
     if (already_running) :
         update.message.reply_text('I am already active and hunting, mate! (btw you could check my logs to see my state...)')
     else:
-	#job = my_cron.new(command='source /home/feyruz/.bashrc; /home/feyruz/perl5/perlbrew/perls/perl-5.20.3/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_autorespond.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='knight-rider')
+        #job = my_cron.new(command='source /home/feyruz/.bashrc; /home/feyruz/perl5/perlbrew/perls/perl-5.20.3/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_autorespond.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='knight-rider')
         job = my_cron.new(command='PERL5LIB=/home/feyruz/perl5/lib/perl5:/home/feyruz/sandbox/RideAway-AutoResponder/lib /usr/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_autorespond.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='knight-rider')
 #        cron_minutes_str = get_cron_minutes()
         cron_minutes_str = '*/5 * * * *'
@@ -86,15 +86,13 @@ def logs(bot, update):
     app_arr   = []
     for line in tail("-n 1", "/home/feyruz/sandbox/RideAway-AutoResponder/logs/app.verbose.log", _iter=False):
         debug_arr.append(line)
-    for line in tail("-n 10", "/home/feyruz/sandbox/RideAway-AutoResponder/logs/app.log", _iter=False):
+    for line in tail("-n 3", "/home/feyruz/sandbox/RideAway-AutoResponder/logs/app.log", _iter=False):
         app_arr.append(line)
-
     for line in tail("-n 3", "/home/feyruz/sandbox/RideAway-AutoResponder/logs/imap.live.log", _iter=False):
         line = line.rstrip()
         imap_arr.append(line[0:30] + '\n')
 
-    update.message.reply_text('******* DEBUG ********\n' + ''.join(debug_arr) + '\n******* APP ********\n' + ''.join(app_arr) + '\n******* IMAP ********\n' +  ''.join(imap_arr))
-   # update.message.reply_text('******* DEBUG ********\n' + ''.join(debug_arr) + '\n******* IMAP ********\n' +  ''.join(imap_arr))
+    update.message.reply_text('******* APP ********\n' + ''.join(app_arr) + '\n******* DEBUG ********\n' + ''.join(debug_arr) + '\n******* IMAP ********\n' +  ''.join(imap_arr))
 
 def echo(bot, update):
     """Echo the user message."""
