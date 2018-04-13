@@ -345,57 +345,79 @@ sub test_make_ride : Test(no_plan) {
     );
 }
 
-
-sub test_applying : Test(no_plan) {
+sub test_ride_passes_criteria: Test(no_plan) {
     my $self = shift;
 
     my $rd = $self->{rd};
     my $ride;
-    SKIP: {
-        eval { $ride = $rd->make_ride( $self->{sample_email_single_qp_body} ) };
-        skip "ride couldn't be made: $@", 2 if $@;
+    $ride = $rd->make_ride( $self->{sample_email_single_qp_body} );
+    $ride = Test::MockObject::Extends->new($ride);
+    my $status_rs = $self->{schema}->resultset('Status');
+    my $status_unknown = $status_rs->search({ code => 'unknown'})->single;
+    $ride->update({status => $status_unknown });
 
-        $ride = Test::MockObject::Extends->new($ride);
+    is($rd->ride_passes_criteria($ride), 0, 'doesnt pass because not new');
+    my $status_new     = $status_rs->search({ code => 'new'})->single;
+    $ride->update({status => $status_new,
+                   price => 1000
+    });
+    # BLOCKER take crit from CONFIG
+    is($rd->ride_passes_criteria($ride), 1, 'new and lucrative');
 
-        my $status_rs = $self->{schema}->resultset('Status');
+}
 
-        my $status_unknown = $status_rs->search({ code => 'unknown'})->single;
-        my $status_new     = $status_rs->search({ code => 'new'})->single;
-        $ride->update({status => $status_unknown });
+sub test__analyse: Test(no_plan) {
+    my $self = shift;
 
-        # shouldn't apply unless the ride is new or locked for others:
-        is( $ride->apply, undef, 'returns undef unless the Ride is "new" or "locked_for_others" statuses' );
+    my $rd = $self->{rd};
+    my $ride;
+    $ride = $rd->make_ride( $self->{sample_email_single_qp_body} );
+    $ride = Test::MockObject::Extends->new($ride);
+    throws_ok { $ride->_analyse()
+    } qr/Decoded content missing!/,
+    'error ok';
 
+}
+sub test_apply : Test(no_plan) {
+    my $self = shift;
 
-        subtest 'new msg, but the response rejects me because someone else got it' => sub {
-            # should apply
-            $ride->update({status => $status_new });
-            $ride->mock('_get_decoded_content', sub { $self->{sample_afwijzing} } );
+    my $rd = $self->{rd};
+    my $ride = $rd->make_ride( $self->{sample_email_single_qp_body} );
+    $ride = Test::MockObject::Extends->new($ride);
+    my $status_rs = $self->{schema}->resultset('Status');
 
-            $ride->apply();
+    my $status_unknown = $status_rs->search({ code => 'unknown'})->single;
+    my $status_new     = $status_rs->search({ code => 'new'})->single;
+    $ride->update({status => $status_unknown });
 
-            is($ride->status->code, 'rejected', 'decoded content indicated someone else has the ride');
-        };
+    subtest 'new msg, but the response rejects me because someone else got it' => sub {
+        # should apply
+        $ride->update({status => $status_new });
+        $ride->mock('_get_decoded_content', sub { $self->{sample_afwijzing} } );
 
-        subtest 'new msg, but locked for someone else' => sub {
-            # should apply
-            $ride->update({status => $status_new });
-            $ride->mock('_get_decoded_content', sub { $self->{sample_locked_for_others} } );
+        $ride->apply();
 
-            $ride->apply();
+        is($ride->status->code, 'rejected', 'decoded content indicated someone else has the ride');
+    };
 
-            is($ride->status->code, 'locked_for_others', 'decoded content indicated ride is locked for others');
-        };
+    subtest 'new msg, but locked for someone else' => sub {
+        # should apply
+        $ride->update({status => $status_new });
+        $ride->mock('_get_decoded_content', sub { $self->{sample_locked_for_others} } );
 
-        subtest 'new msg, but locked for me else' => sub {
-            # should apply
-            $ride->update({status => $status_new });
-            $ride->mock('_get_decoded_content', sub { $self->{sample_locked_for_me} } );
+        $ride->apply();
 
-            $ride->apply();
+        is($ride->status->code, 'locked_for_others', 'decoded content indicated ride is locked for others');
+    };
 
-            is($ride->status->code, 'locked_for_me', 'decoded content indicated ride is locked for me');
-        };
+    subtest 'new msg, but locked for me else' => sub {
+        # should apply
+        $ride->update({status => $status_new });
+        $ride->mock('_get_decoded_content', sub { $self->{sample_locked_for_me} } );
+
+        $ride->apply();
+
+        is($ride->status->code, 'locked_for_me', 'decoded content indicated ride is locked for me');
     };
 }
 

@@ -203,14 +203,6 @@ my $logger = Log::Log4perl::get_logger();
 sub apply {
     my ($self) = @_;
 
-    unless ($self->status->code eq 'new') {
-        $logger->warn(sprintf 'ride is not new! [%s, %s], wont apply!',
-                        $self->created_dt,
-                        $self->id
-                    );
-        return undef;
-    }
-
     my $decoded_content = $self->_get_decoded_content;
     $self->create_related(
         'responses',
@@ -220,16 +212,22 @@ sub apply {
         }
     );
 
-    # RideAway::Schema::Result::Status
     my $status = $self->_analyse($decoded_content);
-
     return $status;
 }
+
+sub is_new {
+    my $self = shift;
+    my $status = $self->status;
+    return ($status and $status->code eq 'new');
+}
+
 
 sub _analyse {
     my ($self, $decoded_content) = @_;
 
-    $logger->logdie('No decoded content here') unless $decoded_content;
+    $logger->logdie('Decoded content missing!')
+        unless $decoded_content;
 
     my $status;
     my $status_rs = $self->result_source->schema->resultset('Status');

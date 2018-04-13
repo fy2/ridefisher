@@ -312,7 +312,8 @@ sub ride_passes_criteria {
     }
 
     return 1 if $ride->location_to =~ /schiphol/i or $ride->location_from =~ /schiphol/i;
-    return 0 if $ride->price < 80;
+    return 1 if $ride->price >= 70;
+    return 0;
 }
 
 sub _disconnect {
