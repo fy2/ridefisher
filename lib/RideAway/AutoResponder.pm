@@ -119,14 +119,14 @@ sub _build_schema {
     my $self = shift;
 
     RideAway::Schema->connect(
-                                 $self->dsn,
-                                 undef,
-                                 undef,
-                                 { on_connect_do => ['PRAGMA foreign_keys = ON',
-                                                     'PRAGMA encoding="UTF-8"',
-                                                    ]
-                                }
-                             );
+         $self->dsn,
+         undef,
+         undef,
+         { on_connect_do => ['PRAGMA foreign_keys = ON',
+                             'PRAGMA encoding="UTF-8"',
+                            ]
+        }
+    );
 }
 
 has imap_password => (
@@ -184,20 +184,17 @@ sub _build_imap {
     my $client;
     eval {
         $client = Mail::IMAPClient->new(
-              Server    => $self->imap_server,
-              User      => $self->imap_username,
-              Password  => $self->imap_password,
-              Ssl       => 1,
-              Debug     => 1,
-              Keepalive => 1,
-              Debug_fh  => IO::File->new(">>" . $self->imap_debug_file)
-                  || die "Can't open imap debugging output file for write: $!\n"
-              ) or die $@;
+            Server    => $self->imap_server,
+            User      => $self->imap_username,
+            Password  => $self->imap_password,
+            Ssl       => 1,
+            Debug     => 1,
+            Keepalive => 1,
+            Debug_fh  => IO::File->new(">>" . $self->imap_debug_file)
+                || die "Can't open imap debugging output file for write: $!\n"
+        ) or die $@;
     };
-    if (my $err = $@) {
-        die $err;
-    }
-
+    if (my $err = $@) { die $err; }
     return $client;
 }
 
@@ -294,10 +291,7 @@ sub apply_to_ride {
                 $ride->url );
         }
         else {
-            $self->send_telegram( sprintf "Applied for a ride but didnt get it. Status: [%s], Van: [%s...]",
-                                      $status->code,
-                                      substr( $ride->location_from, 0, 50 )
-            );
+            $self->send_telegram( sprintf "Failed to get: Status: [%s], [%s...]", $status->code, substr( $ride->location_from, 0, 50 ) );
         }
     };
     if (my $err = $@) {
@@ -349,10 +343,8 @@ sub fetch_rides {
         my $body = $imap->Strip_cr($body_string);
 
         if ( $self->is_a_ride_email($body) ) {
-            #  $logger->info( "Found a ride [$msg_id], I will try to create a ride object now");
             my $ride = $self->make_ride( $body, $msg_id );
             if ($ride) {
-                #   $logger->info( sprintf("Created ride with id [%s] for msgid [%s]", $ride->id, $msg_id) );
                 push @rides, $ride;
             }
             else {
@@ -445,7 +437,6 @@ sub make_ride {
     my $status_fail = $status_rs->search( { code => 'failed' } )->single;
 
     # first attempt
-    # $logger->info("Parsing the email...");
     my $data = $self->_parse_non_html($email_body);
 
     if (not $data) {
