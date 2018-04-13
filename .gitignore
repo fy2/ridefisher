@@ -2,7 +2,7 @@ imap.output
 *.bak
 crontab.out
 mech.pl
-config.live.ini
+config.live.in*
 test_output.txt
 test_sms.pl
 mechanize.pl
