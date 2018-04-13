@@ -23,6 +23,7 @@ import configparser
 from crontab import CronTab
 from sh import tail
 import datetime
+import subprocess
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -91,8 +92,10 @@ def logs(bot, update):
     for line in tail("-n 3", "/home/feyruz/sandbox/RideAway-AutoResponder/logs/imap.live.log", _iter=False):
         line = line.rstrip()
         imap_arr.append(line[0:30] + '\n')
-
     update.message.reply_text('******* APP ********\n' + ''.join(app_arr) + '\n******* DEBUG ********\n' + ''.join(debug_arr) + '\n******* IMAP ********\n' +  ''.join(imap_arr))
+
+def uptime(bot, update):
+    update.message.reply_text(subprocess.check_output(["uptime"]))
 
 def echo(bot, update):
     """Echo the user message."""
@@ -133,6 +136,7 @@ def main():
     dp.add_handler(CommandHandler("stop", stop))
     dp.add_handler(CommandHandler("logs", logs))
     dp.add_handler(CommandHandler("status", status))
+    dp.add_handler(CommandHandler("uptime", uptime))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
