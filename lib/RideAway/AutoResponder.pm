@@ -225,8 +225,6 @@ sub run {
     my ($self) = @_;
 
     $logger->debug('Enter run');
-    my $start_time  = DateTime->now(time_zone => "Europe/London");
-
     my $imap = $self->imap;
 
     $imap->select("Inbox") or $logger->logdie("Could not select Inbox: $@");
@@ -236,8 +234,6 @@ sub run {
         $self->gracefully_end();
         exit;
     }
-    $logger->debug("idling...");
-
     my $seconds_to_go =  $self->poll_seconds;
     $logger->debug("Gonna poll for $seconds_to_go seconds!");
 
@@ -247,83 +243,25 @@ sub run {
     while($seconds_to_go > 0) {
 
         my $idlemsgs;
-        eval {
-            $idlemsgs = $imap->idle_data();
-        };
-        # see if this is a disconnect:
-        if (my $err = $@) {
-            if ($retry > 0 ) {
-                $logger->error("idle_data error: $err. I will retry connecting...");
-                $imap->noop or $imap->reconnect or $logger->logdie("noop failed: $@");
-                $tag = $imap->idle or $logger->error("idle failed: $@");
-                $retry--;
-            }
-            else {
-                $self->gracefully_end();
-                last POLLING;
-            }
+        unless ($idlemsgs = $imap->idle_data ) {
+            $logger->error("idle_data failed:[$@]");
+            $self->gracefully_end();
+            last POLLING;
         }
 
-        if (ref($idlemsgs) eq 'ARRAY' && scalar @{$idlemsgs} > 0 ) {
-
+        if ($idlemsgs && @{$idlemsgs} > 0 ) {
             unless ( $imap->done($tag) ) {
                 $logger->error("Error from done: $@");
                 last POLLING;
             }
-
-            #            $logger->debug("NEW emails! Analysing..");
             my @msgids = $self->get_message_ids($idlemsgs);
             my @rides  = $self->fetch_rides(\@msgids);
-            RIDE: foreach my $ride ( @rides ) {
+            RIDE:
+            foreach my $ride ( @rides ) {
+                next RIDE unless $self->ride_passes_criteria($ride);
+                $self->apply_to_ride($ride);
 
-                next RIDE unless $ride->status->code eq 'new';
-
-                # BLOCKER: criteria to accept!
-                if (
-                   ( $ride->price && $ride->price > 80 )
-                   ||
-                     $ride->location_to =~ /schiphol/i
-                   ||
-                     $ride->location_from =~ /schiphol/i
-                   )
-                {
-                    eval {
-                        my $status = $ride->apply;
-                        # BLOCKER Assume this means LOCKED_FOR_ME
-                        if ($status and $status->code eq 'locked_for_me') {
-                            $self->send_telegram(
-                                sprintf "**BINGO A RIDE IS LOCKED** Date:[%s], Price:[%s], Van: [%s...], Naar: [%s...], ID: [%s], Link [%s]",
-                                $ride->ride_dt,
-                                $ride->price,
-                                substr( $ride->location_from, 0, 50 ),
-                                substr( $ride->location_to, 0, 50 ),
-                                $ride->id,
-                                $ride->url );
-                        }
-                        else {
-                            $self->send_telegram(
-                                sprintf "Applied for a ride but didnt get it. Status: [%s], Van: [%s...]",
-                                    $ride->status->code,
-                                    substr( $ride->location_from, 0, 50 )
-                            );
-                        }
-                    };
-                    if ($@) {
-                        $logger->error("Apply failed [$@]");
-                        my $status_rs   = $self->schema->resultset('Status');
-                        my $status_fail = $status_rs->search( { code => 'failed' } )->single;
-                        $ride->update({ status => $status_fail });
-                    }
-                }
-                else {
-                    $logger->info( sprintf('We have rejected a ride. It did not meet our minimum criteria for price or location: Van: [%s], Naar: [%s], price: [%s]',
-                                        $ride->location_from,
-                                        $ride->location_to,
-                                        $ride->price
-                                    )
-                                  );
-                }
-                $seconds_to_go -= 5 unless $self->is_test_mode; # to make for the time spent
+                $seconds_to_go -= 5 unless $self->is_test_mode;
             }
             unless ( $tag = $imap->idle ) {
                 $logger->error("couldnt get the tag: $@");
@@ -332,11 +270,55 @@ sub run {
             }
         }
 
-        $logger->debug(sprintf "Polling %.2f", $seconds_to_go) if int(rand(1000) >= 990);
+        $logger->debug(sprintf "Polling %.2f", $seconds_to_go) if int(rand(10000) >= 9990);
         sleep(0.01);
         $seconds_to_go -= 0.01;
     }
     $self->_disconnect($tag);
+}
+
+
+sub apply_to_ride {
+    my ($self, $ride) = @_;
+
+    eval {
+        my $status = $ride->apply;
+        if ($status and $status->code eq 'locked_for_me') {
+            $self->send_telegram(
+                sprintf "**BINGO A RIDE IS LOCKED** Date:[%s], Price:[%s], Van: [%s...], Naar: [%s...], ID: [%s], Link [%s]",
+                $ride->ride_dt,
+                $ride->price,
+                substr( $ride->location_from, 0, 50 ),
+                substr( $ride->location_to, 0, 50 ),
+                $ride->id,
+                $ride->url );
+        }
+        else {
+            $self->send_telegram( sprintf "Applied for a ride but didnt get it. Status: [%s], Van: [%s...]",
+                                      $status->code,
+                                      substr( $ride->location_from, 0, 50 )
+            );
+        }
+    };
+    if (my $err = $@) {
+        $logger->error("Apply failed [$err]");
+        my $status_rs   = $self->schema->resultset('Status');
+        my $status_fail = $status_rs->search( { code => 'failed' } )->single;
+        $ride->update({ status => $status_fail });
+    }
+}
+
+sub ride_passes_criteria {
+    my ($self, $ride) = @_;
+
+    my $code = $ride->status->code;
+    unless ($code eq 'new') {
+        $logger->warn("Ride status is not 'new' [$code]");
+        return 0;
+    }
+
+    return 1 if $ride->location_to =~ /schiphol/i or $ride->location_from =~ /schiphol/i;
+    return 0 if $ride->price < 80;
 }
 
 sub _disconnect {

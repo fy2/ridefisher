@@ -47,7 +47,7 @@ def start(bot, update):
         #job = my_cron.new(command='source /home/feyruz/.bashrc; /home/feyruz/perl5/perlbrew/perls/perl-5.20.3/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_autorespond.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='knight-rider')
         job = my_cron.new(command='PERL5LIB=/home/feyruz/perl5/lib/perl5:/home/feyruz/sandbox/RideAway-AutoResponder/lib /usr/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_autorespond.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='knight-rider')
 #        cron_minutes_str = get_cron_minutes()
-        cron_minutes_str = '*/5 * * * *'
+        cron_minutes_str = '*/6 * * * *'
         job.setall(cron_minutes_str)
         update.message.reply_text('I will start hunting for rides now: Crontab - ' + cron_minutes_str)
         my_cron.write()
