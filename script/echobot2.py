@@ -95,7 +95,9 @@ def logs(bot, update):
     update.message.reply_text('******* APP ********\n' + ''.join(app_arr) + '\n******* DEBUG ********\n' + ''.join(debug_arr) + '\n******* IMAP ********\n' +  ''.join(imap_arr))
 
 def uptime(bot, update):
-    update.message.reply_text(subprocess.check_output(["uptime"]))
+    # https://stackoverflow.com/questions/15374211/why-does-popen-communicate-return-bhi-n-instead-of-hi
+    out = subprocess.check_output(["uptime"]).decode('ascii').rstrip()
+    update.message.reply_text(out)
 
 def echo(bot, update):
     """Echo the user message."""
