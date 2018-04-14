@@ -102,7 +102,7 @@ def uptime(bot, update):
 def unsinn(bot, update):
     # https://stackoverflow.com/questions/15374211/why-does-popen-communicate-return-bhi-n-instead-of-hi
     german =  [ '/usr/share/games/fortunes/de/' + i for i in ['letzteworte', 'witze', 'stilblueten', 'sicherheitshinweise', 'wusstensie']]
-    out = subprocess.check_output( ["/usr/games/fortune", "-c", "/usr/share/games/fortunes/riddles"] + german  ).decode('utf-8').rstrip()
+    out = subprocess.check_output( ["/usr/games/fortune", "/usr/share/games/fortunes/riddles"] + german  ).decode('utf-8').rstrip()
     update.message.reply_text(out)
 
 def echo(bot, update):
