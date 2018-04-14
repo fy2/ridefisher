@@ -99,6 +99,12 @@ def uptime(bot, update):
     out = subprocess.check_output(["uptime"]).decode('ascii').rstrip()
     update.message.reply_text(out)
 
+def unsinn(bot, update):
+    # https://stackoverflow.com/questions/15374211/why-does-popen-communicate-return-bhi-n-instead-of-hi
+    german =  [ '/usr/share/games/fortunes/de/' + i for i in ['letzteworte', 'witze', 'stilblueten', 'sicherheitshinweise', 'wusstensie']]
+    out = subprocess.check_output( ["/usr/games/fortune", "-c", "/usr/share/games/fortunes/riddles"] + german  ).decode('utf-8').rstrip()
+    update.message.reply_text(out)
+
 def echo(bot, update):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
@@ -139,6 +145,7 @@ def main():
     dp.add_handler(CommandHandler("logs", logs))
     dp.add_handler(CommandHandler("status", status))
     dp.add_handler(CommandHandler("uptime", uptime))
+    dp.add_handler(CommandHandler("unsinn", unsinn))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
