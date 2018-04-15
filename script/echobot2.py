@@ -38,7 +38,8 @@ def start(bot, update):
     """Send a message when the command /start is issued."""
 
     config = configparser.ConfigParser()
-    config.read('/home/feyruz/sandbox/RideAway-AutoResponder/config/config.live.ini')
+    cfile = '/home/feyruz/sandbox/RideAway-AutoResponder/config/config.live.ini'
+    config.read(cfile)
     should_persist = config['ride']['persist']
     if should_persist == 0:
         config['ride']['persist'] = '1'
@@ -58,9 +59,6 @@ def start(bot, update):
         job.setall( '*/6 * * * *')
         job2 = my_cron.new(command='PERL5LIB=/home/feyruz/perl5/lib/perl5:/home/feyruz/sandbox/RideAway-AutoResponder/lib /usr/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_persist.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='persist')
         job2.setall( '*/1 * * * *')
-        config = configparser.ConfigParser()
-        cfile = '/home/feyruz/sandbox/RideAway-AutoResponder/config/config.live.ini'
-        config.read(cfile)
 
         my_cron.write()
         update.message.reply_text('Okay I have started - Persistent Mode: %s' % (should_persist) )
