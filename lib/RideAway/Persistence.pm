@@ -109,7 +109,7 @@ sub run {
         my @rides = $self->_get_rides; # reapplicable rides
         unless (@rides) {
             $logger->debug("No rides waiting, exiting run");
-            last RUN unless @rides;
+            last RUN;
         }
         foreach my $ride (@rides) {
             my $retries = $ride->retries;
@@ -172,7 +172,7 @@ sub apply_to_ride {
                 $ride->url
         ));
     }
-    else {
+    elsif( $status->code ne 'locked_for_others') {
         $self->send_telegram( sprintf "Giving up on ride id: [%d], Van: [%s...] because I have received status: [%s]",
                                   $ride->id,
                                   substr( $ride->location_from, 0, 50 ),
