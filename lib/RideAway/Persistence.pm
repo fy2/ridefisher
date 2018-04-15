@@ -103,7 +103,7 @@ sub run {
     while( $seconds_to_try > 0) {
         my @rides = $self->_get_rides; # reapplicable rides
         unless (@rides) {
-            $logger->debug("No rides waiting, exitin run");
+            $logger->debug("No rides waiting, exiting run");
             last RUN unless @rides;
         }
 
@@ -121,14 +121,14 @@ sub run {
             my $status = $self->apply_to_ride($ride);
             $ride->update({retries => $retries + 1});
             my $wait = $self->_wait_between_ride_clicks;
-            $logger->debug("going to wait $wait secs until processing next reapplicable ride!");
+            #            $logger->debug("going to wait $wait secs until processing next reapplicable ride!");
             $self->_sleep_ride($wait);
             $seconds_to_try -= $wait;
         }
 
         my $wait_retry = $self->_wait_retry;
         $self->send_telegram(sprintf 'Next update in [%d] seconds', $wait_retry);
-        $logger->debug("going to wait $wait_retry until next round of batch process!");
+        #        $logger->debug("going to wait $wait_retry until next round of batch process!");
         $self->_sleep_retry($wait_retry);
         $seconds_to_try -= $wait_retry;
     }
@@ -189,13 +189,6 @@ sub _get_rides {
     my @rides = $ride_rs->reapplicable_rides->search(
                     { retries => { '<' => $self->max_retries } }
                 );
-
-    unless (@rides) {
-        $logger->debug('couldnt find any reapplicable rides below retry thresh.');
-    }
-    foreach my $ride (@rides) {
-        $logger->info('ride location_from' . $ride->location_from);
-    }
     return @rides;
 }
 

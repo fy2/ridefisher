@@ -37,6 +37,15 @@ logger = logging.getLogger(__name__)
 def start(bot, update):
     """Send a message when the command /start is issued."""
 
+    config = configparser.ConfigParser()
+    config.read('/home/feyruz/sandbox/RideAway-AutoResponder/config/config.live.ini')
+    should_persist = config['ride']['persist']
+    if should_persist == 0:
+        config['ride']['persist'] = '1'
+        with open(cfile, 'w') as configfile:
+            config.write(configfile)
+    should_persist = '1'
+
     my_cron = CronTab(user='feyruz')
     already_running = False
     for job in my_cron:
@@ -45,13 +54,31 @@ def start(bot, update):
     if (already_running) :
         update.message.reply_text('I am already active and hunting, mate! (btw you could check my logs to see my state...)')
     else:
-        #job = my_cron.new(command='source /home/feyruz/.bashrc; /home/feyruz/perl5/perlbrew/perls/perl-5.20.3/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_autorespond.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='knight-rider')
         job = my_cron.new(command='PERL5LIB=/home/feyruz/perl5/lib/perl5:/home/feyruz/sandbox/RideAway-AutoResponder/lib /usr/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_autorespond.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='knight-rider')
-#        cron_minutes_str = get_cron_minutes()
-        cron_minutes_str = '*/6 * * * *'
-        job.setall(cron_minutes_str)
-        update.message.reply_text('I will start hunting for rides now: Crontab - ' + cron_minutes_str)
+        job.setall( '*/6 * * * *')
+        job2 = my_cron.new(command='PERL5LIB=/home/feyruz/perl5/lib/perl5:/home/feyruz/sandbox/RideAway-AutoResponder/lib /usr/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_persist.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='persist')
+        job2.setall( '*/1 * * * *')
+        config = configparser.ConfigParser()
+        cfile = '/home/feyruz/sandbox/RideAway-AutoResponder/config/config.live.ini'
+        config.read(cfile)
+
         my_cron.write()
+        update.message.reply_text('Okay I have started - Persistent Mode: %s' % (should_persist) )
+
+def persistoff(bot, update):
+    my_cron = CronTab(user='feyruz')
+    for job in my_cron:
+        if job.comment == 'persist':
+            my_cron.remove(job)
+            my_cron.write()
+    config = configparser.ConfigParser()
+    cfile = '/home/feyruz/sandbox/RideAway-AutoResponder/config/config.live.ini'
+    config.read(cfile)
+    config['ride']['persist'] = '0'
+    with open(cfile, 'w') as configfile:
+        config.write(configfile)
+
+    update.message.reply_text('Persistent Mode: 0')
 
 def stop(bot, update):
     """Send a message when the command /stop is issued."""
@@ -59,27 +86,24 @@ def stop(bot, update):
     my_cron = CronTab(user='feyruz')
     was_running = False
     for job in my_cron:
-        if job.comment == 'knight-rider':
-            was_running = True
+        if (job.comment == 'knight-rider') or (job.comment == 'persist'):
             my_cron.remove(job)
             my_cron.write()
-
-    if (was_running):
-        update.message.reply_text('Okay, I will stop hunting.')
-    else:
-        update.message.reply_text('Stop what? You had already stopped me!')
+    update.message.reply_text('No more hunting')
 
 def status(bot, update):
 
     my_cron = CronTab(user='feyruz')
-    already_running = False
+    kitt_running = False
+    persist_running = False
     for job in my_cron:
         if job.comment == 'knight-rider':
-            already_running = True
-    if (already_running) :
-        update.message.reply_text('Running')
-    else:
-        update.message.reply_text('Stopped')
+            kitt_running = True
+        if job.comment == 'persist':
+            persist_running = True
+
+    update.message.reply_text('Kitt running - %s' % (kitt_running) )
+    update.message.reply_text('Persistency mode - %s' % (persist_running) )
 
 def logs(bot, update):
     debug_arr = []
@@ -109,21 +133,9 @@ def echo(bot, update):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
-def get_cron_minutes():
-    now = datetime.datetime.now()
-    curr_minute = now.minute + 1
-    interval = 15
-    minutes = []
-
-    for i in (range(0,4)):
-        minute = (curr_minute + i * interval) % 60
-        minutes.append(str(minute))
-    return ','.join(minutes) + ' * * * *'
-
 def error(bot, update, error):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, error)
-
 
 def main():
 
@@ -142,6 +154,7 @@ def main():
     dp.add_handler(CommandHandler("start", start))
 #    dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("stop", stop))
+    dp.add_handler(CommandHandler("persistoff", persistoff))
     dp.add_handler(CommandHandler("logs", logs))
     dp.add_handler(CommandHandler("status", status))
     dp.add_handler(CommandHandler("uptime", uptime))
