@@ -40,12 +40,9 @@ def start(bot, update):
     config = configparser.ConfigParser()
     cfile = '/home/feyruz/sandbox/RideAway-AutoResponder/config/config.live.ini'
     config.read(cfile)
-    should_persist = config['ride']['persist']
-    if should_persist == 0:
-        config['ride']['persist'] = '1'
-        with open(cfile, 'w') as configfile:
-            config.write(configfile)
-    should_persist = '1'
+    config['ride']['persist'] = '1'
+    with open(cfile, 'w') as configfile:
+        config.write(configfile)
 
     my_cron = CronTab(user='feyruz')
     already_running = False
@@ -61,7 +58,7 @@ def start(bot, update):
         job2.setall( '*/1 * * * *')
 
         my_cron.write()
-        update.message.reply_text('Okay I have started - Persistent Mode: %s' % (should_persist) )
+        update.message.reply_text('Okay I have started - Persistent Mode: 1')
 
 def persistoff(bot, update):
     my_cron = CronTab(user='feyruz')
