@@ -6,7 +6,6 @@ use MooseX::Configuration;
 use Mail::IMAPClient;
 use DateTime;
 use Time::HiRes qw(sleep);
-use Audio::Beep;
 use namespace::autoclean;
 use MIME::QuotedPrint;
 use RideAway::Schema;
@@ -36,6 +35,13 @@ has telegram_token => (
     isa           => 'Any',
     section       => 'telegram',
     key           => 'token',
+);
+
+has persistent_mode_is_on => (
+    is            => 'ro',
+    isa           => 'Any',
+    section       => 'ride',
+    key           => 'persist',
 );
 
 has telegram_chat_id => (
@@ -77,37 +83,6 @@ sub _build_telegram {
     return $api;
 }
 
-sub send_telegram {
-    my ($self, $message) = @_;
-    return if $self->is_test_mode;
-    eval {
-        $self->telegram->sendMessage ({
-            chat_id => $self->telegram_chat_id,
-            text    => $message,
-        });
-    };
-    if (my $err = $@) {
-        $logger->error("couldnt send via telegram [$err].");
-    }
-}
-
-sub send_message {
-    my ($self, $message) = @_;
-    eval {
-        $self->telegram->sendMessage ({
-            chat_id => $self->telegram_chat_id,
-            text    => $message,
-        });
-    };
-    if (my $err = $@) {
-        $logger->error("couldnt send via telegram [$err]. Trying sms:");
-        $self->text_magic->send(
-            text    =>  $message,
-            phones  => ['+'. $self->phone ],
-        );
-    }
-}
-
 has schema => (
     is            => 'ro',
     isa           => 'Any',
@@ -124,6 +99,7 @@ sub _build_schema {
          undef,
          { on_connect_do => ['PRAGMA foreign_keys = ON',
                              'PRAGMA encoding="UTF-8"',
+                             'PRAGMA quick_check'
                             ]
         }
     );
@@ -214,6 +190,45 @@ has is_test_mode => (
 
 =head1 METHODS
 
+=head2 send_telegram
+
+=cut
+
+sub send_telegram {
+    my ($self, $message) = @_;
+    return if $self->is_test_mode;
+    eval {
+        $self->telegram->sendMessage ({
+            chat_id => $self->telegram_chat_id,
+            text    => $message,
+        });
+    };
+    if (my $err = $@) {
+        $logger->error("couldnt send via telegram [$err].");
+    }
+}
+
+=head2 send_message
+
+=cut
+
+sub send_message {
+    my ($self, $message) = @_;
+    eval {
+        $self->telegram->sendMessage ({
+            chat_id => $self->telegram_chat_id,
+            text    => $message,
+        });
+    };
+    if (my $err = $@) {
+        $logger->error("couldnt send via telegram [$err]. Trying sms:");
+        $self->text_magic->send(
+            text    =>  $message,
+            phones  => ['+'. $self->phone ],
+        );
+    }
+}
+
 =head2 run
 
 =cut
@@ -255,10 +270,16 @@ sub run {
             my @rides  = $self->fetch_rides(\@msgids);
             RIDE:
             foreach my $ride ( @rides ) {
-                next RIDE unless $self->ride_passes_criteria($ride);
-                $self->apply_to_ride($ride);
-
-                $seconds_to_go -= 5 unless $self->is_test_mode;
+                if ( $self->ride_passes_criteria($ride) ) {
+                    $self->apply_to_ride($ride);
+                    # some leeway:
+                    $seconds_to_go -= 5 unless $self->is_test_mode;
+                }
+                else {
+                    $ride->update( { should_persist => 1 } )
+                        if  $ride->status->code eq 'locked_for_others'
+                            && $self->persistent_mode_is_on;
+                }
             }
             unless ( $tag = $imap->idle ) {
                 $logger->error("couldnt get the tag: $@");
@@ -278,27 +299,19 @@ sub run {
 sub apply_to_ride {
     my ($self, $ride) = @_;
 
-    eval {
-        my $status = $ride->apply;
-        if ($status and $status->code eq 'locked_for_me') {
-            $self->send_telegram(
-                sprintf "**BINGO A RIDE IS LOCKED** Date:[%s], Price:[%s], Van: [%s...], Naar: [%s...], ID: [%s], Link [%s]",
-                $ride->ride_dt,
-                $ride->price,
-                substr( $ride->location_from, 0, 50 ),
-                substr( $ride->location_to, 0, 50 ),
-                $ride->id,
-                $ride->url );
-        }
-        else {
-            $self->send_telegram( sprintf "Failed to get: Status: [%s], [%s...]", $status->code, substr( $ride->location_from, 0, 50 ) );
-        }
-    };
-    if (my $err = $@) {
-        $logger->error("Apply failed [$err]");
-        my $status_rs   = $self->schema->resultset('Status');
-        my $status_fail = $status_rs->search( { code => 'failed' } )->single;
-        $ride->update({ status => $status_fail });
+    my $status = $ride->apply;
+    if ($status->code eq 'locked_for_me') {
+        $self->send_telegram(
+            sprintf "**BINGO A RIDE IS LOCKED** Date:[%s], Price:[%s], Van: [%s...], Naar: [%s...], ID: [%s], Link [%s]",
+            $ride->ride_dt,
+            $ride->price,
+            substr( $ride->location_from, 0, 50 ),
+            substr( $ride->location_to, 0, 50 ),
+            $ride->id,
+            $ride->url );
+    }
+    else {
+        $self->send_telegram( sprintf "Failed to get: Status: [%s], [%s...]", $status->code, substr( $ride->location_from, 0, 50 ) );
     }
 }
 

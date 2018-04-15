@@ -24,6 +24,6 @@ pod2htm*.tmp
 pm_to_blib
 RideAway-AutoResponder-*
 RideAway-AutoResponder-*.tar.gz
-*.db
+rideaway.db
 logs/*
 *.swo

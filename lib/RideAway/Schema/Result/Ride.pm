@@ -98,6 +98,18 @@ __PACKAGE__->table("ride");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 should_persist
+
+  data_type: 'boolean'
+  default_value: FALSE
+  is_nullable: 0
+
+=head2 retries
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -125,6 +137,10 @@ __PACKAGE__->add_columns(
   { data_type => "int", default_value => 0, is_nullable => 1 },
   "status_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "should_persist",
+  { data_type => "boolean", default_value => \"FALSE", is_nullable => 0 },
+  "retries",
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -188,8 +204,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2018-03-26 12:40:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pwXlts0GjeN9DYU8iuQLbQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2018-04-15 09:35:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7j2dwr1bDcgIzQ0YX/yhSA
 
 use Net::Curl::Easy qw(:constants);
 use DateTime;
@@ -203,17 +219,26 @@ my $logger = Log::Log4perl::get_logger();
 sub apply {
     my ($self) = @_;
 
-    my $decoded_content = $self->_get_decoded_content;
-    $self->create_related(
-        'responses',
-        {
-            created_dt => DateTime->now(time_zone => "Europe/London"),
-            decoded_content => $decoded_content,
-        }
-    );
+    my $status_rs = $self->result_source->schema->resultset('Status');
+    my $status;
+    eval {
+        my $decoded_content = $self->_get_decoded_content;
+        $self->create_related(
+            'responses',
+            {
+                created_dt => DateTime->now(time_zone => "Europe/London"),
+                decoded_content => $decoded_content,
+            }
+        );
 
-    my $status = $self->_analyse($decoded_content);
-    return $status;
+        $status = $self->_analyse($decoded_content);
+    };
+    if (my $err = $@) {
+        $logger->error("Apply failed [$err]");
+        $status = $status_rs->search( { code => 'failed' } )->single;
+        $self->update({ status => $status });
+    }
+    $status;
 }
 
 sub is_new {

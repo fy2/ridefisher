@@ -45,3 +45,7 @@ CREATE TABLE response (
     decoded_content NOT NULL,
     FOREIGN KEY(ride_id) REFERENCES ride(id)
 );
+
+-- Patch 001
+ALTER TABLE ride ADD COLUMN should_persist BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE ride ADD COLUMN retries INTEGER NOT NULL DEFAULT 0;

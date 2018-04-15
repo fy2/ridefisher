@@ -29,7 +29,6 @@ sub rideaway_test_startup : Test(startup) {
     $self->{sample_locked_for_others}    = read_file( "$Bin/../t/data/sample_locked_for_others.html", binmode => ':utf8' );
     $self->{sample_locked_for_me}        = read_file( "$Bin/../t/data/sample_locked_for_me.html", binmode => ':utf8' );
     $self->{bekijk_reserve_qp_body}      = read_file( "$Bin/../t/data/sample_bekijk_reserve_qp.txt", binmode => ':utf8' );
-
 }
 
 sub rideaway_test_setup : Test(setup) {
@@ -115,51 +114,43 @@ sub test_config_from_ini : Test(no_plan) {
     is($rd->telegram_token,   '34243243242342309432432', 'telegram token');
 }
 
-sub test_poll_emails : Test(3) {
+sub test_run : Test(no_plan) {
     my $self = shift;
 
     my $rd   = $self->{rd};
+    my $status_rs  = $self->{schema}->resultset('Status');
 
     isa_ok( $rd,       'RideAway::AutoResponder' );
     isa_ok( $rd->imap, 'Mail::IMAPClient' );
 
     $rd->imap->mock('idle_data', sub { ['* 17 EXISTS'] });
 
-    my $ride = $self->_make_ride;
-    $ride->mock('apply', sub { my $status = Test::MockObject->new;
-                                $status->set_always('code', 'applied!');
-                                return $status;
-                             } );
+    subtest 'Test the persist behaviour' => sub {
+        my $locked_for_others = $status_rs->search({ code => 'locked_for_others'})->single;
+        my $ride1 = $self->_make_ride; # ride is in 'new' status now
+        $ride1->update({status => $locked_for_others}); # set it to locked for others
+        $rd->mock('fetch_rides', sub { ( $ride1 ) } );
+        is($ride1->should_persist, undef, 'persist is false to start with');
+        $rd->run;
+        is($ride1->should_persist, 1, 'persist is set to true because locked for others and persist mode is on in config ini');
 
-    $rd->mock('fetch_rides', sub { ( $ride ) } );
 
-    my $start_time = DateTime->now(time_zone => "Europe/London");
+        my $locked_for_me = $status_rs->search({ code => 'locked_for_me'})->single;
+        my $ride2 = $self->_make_ride; # ride is in 'new' status now
+        $ride2->update({status => $locked_for_me}); # set it to locked fo rme
+        $rd->mock('fetch_rides', sub { ( $ride2 ) } );
+        is($ride2->should_persist, undef, 'persist is false to start with');
+        $rd->run;
+        is($ride2->should_persist, undef, 'persist is false because status code is not locked_for_others');
 
-    my $requested_duration = $rd->poll_seconds; # in seconds
-
-    $rd->run;
-
-    my $now_time  = DateTime->now(time_zone => "Europe/London");
-
-    my $duration = $now_time - $start_time;
-    my $actual_hunting_time = $duration->in_units('seconds');
-
-    my $leeway = 60; #seconds extra time, just in case.
-
-    my $is_in_range = sub {
-        my $num_to_check = shift;
-        if ( $num_to_check >= $requested_duration
-                &&
-              $num_to_check < ( $requested_duration + $leeway )
-           )
-        {
-            return 1;
-        }
-
-        return 0;
+        my $ride3 = $self->_make_ride; # ride is in 'new' status now
+        $ride3->update({status => $locked_for_others}); # set it to locked for others
+        $rd->mock('fetch_rides', sub { ( $ride3 ) } );
+        $rd->set_false('persistent_mode_is_on');
+        is($ride3->should_persist, undef, 'persist is false to start with');
+        $rd->run;
+        is($ride3->should_persist, undef, 'and remains false because of config ini');
     };
-
-    is($is_in_range->($actual_hunting_time), 1, 'Hunt was ended within reasonable time') or diag $actual_hunting_time;
 }
 
 
@@ -376,8 +367,8 @@ sub test__analyse: Test(no_plan) {
     throws_ok { $ride->_analyse()
     } qr/Decoded content missing!/,
     'error ok';
-
 }
+
 sub test_apply : Test(no_plan) {
     my $self = shift;
 
@@ -493,6 +484,5 @@ sub _make_ride {
             status_id => $self->{schema}->resultset('Status')->search( { code => 'new' } )->single->id,
           } );
     return Test::MockObject::Extends->new($ride);
-
 }
 1;
