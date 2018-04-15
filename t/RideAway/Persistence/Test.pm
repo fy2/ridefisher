@@ -188,14 +188,14 @@ sub test_run : Test(no_plan) {
         # simulate running the script a 15 times
 
         @sleep_secs = ();
-        for (1..10) {
+        for (1..17) { # if it ran 17 times..., lets see what number of retries would take place:
             $persist->run;
         }
 
         $ride->discard_changes;
 
         # would apply on average 3x per run (per 60 seconds) if wait_retry = int(rand(15)) + 10
-        # so expect around ~30 applications in 10 runs
+        # so expect around ~30-40 re-applications in 17 runs
         cmp_ok($ride->retries, '<', 50, 'applied less than max range' );
         cmp_ok($ride->retries, '>', 20, 'applied more than min range' );
         diag explain $ride->retries . ' <---- ACTUAL APPLICATION COUNT';
@@ -204,7 +204,7 @@ sub test_run : Test(no_plan) {
         my $total_wait = sum @sleep_secs;
         diag explain join '-', @sleep_secs, '<--- ACTUAL WAIT SECONDS';
         my $avg_wait_span = $total_wait/$num_calls;
-        cmp_ok($avg_wait_span, '<', 40, 'below wait span max' );
+        cmp_ok($avg_wait_span, '<', 50, 'below wait span max' );
         cmp_ok($avg_wait_span, '>', 10, 'above wait span min' );
         diag explain $avg_wait_span . ' <---- ACTUAL WAIT SPAN';
         diag 'Avg - span:'.  $total_wait/$num_calls . ' seconds between calls';

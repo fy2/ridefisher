@@ -27,7 +27,7 @@ has persistent_mode_is_on => (
 has max_retries => (
     is            => 'rw',
     isa           => 'Num',
-    default        => 15,
+    default        => 35, # avg wait time 30 seconds = 35x30/60 = 20 runs ~ 17.5 minutes
     section       => 'ride',
     key           => 'max_retries',
 );
@@ -92,8 +92,6 @@ sub _build_schema {
 
 sub run {
     my $self = shift;
-
-
     my $seconds_to_try = $self->max_run_time;
     my $persistent_mode_is_on = $self->persistent_mode_is_on;
     $logger->debug(sprintf 'Enter run max_run_time [%d], max_retry [%d], persitency [%d]', $seconds_to_try, $self->max_retries, $persistent_mode_is_on);
@@ -106,7 +104,6 @@ sub run {
             $logger->debug("No rides waiting, exiting run");
             last RUN unless @rides;
         }
-
         foreach my $ride (@rides) {
             my $retries = $ride->retries;
             my $retries_to_go = $self->max_retries - $retries;
@@ -121,14 +118,12 @@ sub run {
             my $status = $self->apply_to_ride($ride);
             $ride->update({retries => $retries + 1});
             my $wait = $self->_wait_between_ride_clicks;
-            #            $logger->debug("going to wait $wait secs until processing next reapplicable ride!");
             $self->_sleep_ride($wait);
             $seconds_to_try -= $wait;
         }
 
         my $wait_retry = $self->_wait_retry;
         $self->send_telegram(sprintf 'Next update in [%d] seconds', $wait_retry);
-        #        $logger->debug("going to wait $wait_retry until next round of batch process!");
         $self->_sleep_retry($wait_retry);
         $seconds_to_try -= $wait_retry;
     }
@@ -151,7 +146,7 @@ sub _wait_between_ride_clicks {
 
 sub _wait_retry {
     my $self = shift;
-    int(rand(30)) + 5;
+    int(rand(30)) + 15;
 }
 
 sub apply_to_ride {
