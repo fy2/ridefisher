@@ -310,6 +310,10 @@ sub apply_to_ride {
             $ride->id,
             $ride->url );
     }
+    elsif ($status->code eq 'locked_for_others') {
+        $ride->update( { should_persist => 1 } )
+            if $self->persistent_mode_is_on;
+    }
     else {
         $self->send_telegram( sprintf "Failed to get: Status: [%s], [%s...]", $status->code, substr( $ride->location_from, 0, 50 ) );
     }
