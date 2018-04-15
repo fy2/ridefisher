@@ -111,15 +111,19 @@ sub run {
             $logger->debug("No rides waiting, exiting run");
             last RUN;
         }
+
+        my $wait_retry = $self->_wait_retry;
         foreach my $ride (@rides) {
             my $retries = $ride->retries;
             my $retries_to_go = $self->max_retries - $retries;
             $self->send_telegram(
                 sprintf(
-                    'Activated Persistence on Ride: [%d], [%s]. Re-applying! [%d] retries to go on this ride.',
+                    'Persist - Re-applying to Ride: id: [%d], price: [%d], [%s]. Got [%d] retries. Next update: [%d] seconds',
                     $ride->id,
+                    $ride->price,
                     substr( $ride->location_from, 0, 50 ),
                     $retries_to_go,
+                    $wait_retry,
             ));
 
             my $status = $self->apply_to_ride($ride);
@@ -129,8 +133,6 @@ sub run {
             $seconds_to_try -= $wait;
         }
 
-        my $wait_retry = $self->_wait_retry;
-        $self->send_telegram(sprintf 'Next update in [%d] seconds', $wait_retry);
         $self->_sleep_retry($wait_retry);
         $seconds_to_try -= $wait_retry;
     }
