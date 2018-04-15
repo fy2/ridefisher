@@ -193,7 +193,6 @@ sub _get_rides {
 
 sub send_telegram {
     my ($self, $message) = @_;
-    return if $self->is_test_mode;
     eval {
         $self->telegram->sendMessage ({
             chat_id => $self->telegram_chat_id,
