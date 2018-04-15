@@ -58,7 +58,7 @@ def start(bot, update):
         job2.setall( '*/1 * * * *')
 
         my_cron.write()
-        update.message.reply_text('Okay I have started - Persistent Mode: 1')
+        update.message.reply_text('Okay. I have started. I am Persistent.')
 
 def persistoff(bot, update):
     my_cron = CronTab(user='feyruz')
@@ -98,7 +98,7 @@ def status(bot, update):
             persist_running = True
 
     update.message.reply_text('Kitt running - %s' % (kitt_running) )
-    update.message.reply_text('Persistency mode - %s' % (persist_running) )
+    update.message.reply_text('Persistent - %s' % (persist_running) )
 
 def logs(bot, update):
     debug_arr = []
