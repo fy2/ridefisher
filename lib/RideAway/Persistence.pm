@@ -52,6 +52,13 @@ has telegram_chat_id => (
     key           => 'chat_id',
 );
 
+has telegram_token => (
+    is            => 'ro',
+    isa           => 'Any',
+    section       => 'telegram',
+    key           => 'token',
+);
+
 has telegram => (
     is            => 'rw',
     isa           => 'WWW::Telegram::BotAPI',
