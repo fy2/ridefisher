@@ -128,6 +128,9 @@ def dig(bot, update):
     out = subprocess.check_output( ["/usr/bin/dig", '+short', 'myip.opendns.com', '@resolver1.opendns.com' ]  ).decode('utf-8').rstrip()
     update.message.reply_text(out)
 
+def thanks(bot, update):
+    update.message.reply_text('You are welcome!')
+
 def echo(bot, update):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
@@ -159,6 +162,7 @@ def main():
     dp.add_handler(CommandHandler("uptime", uptime))
     dp.add_handler(CommandHandler("unsinn", unsinn))
     dp.add_handler(CommandHandler("dig", dig))
+    dp.add_handler(CommandHandler("thanks", thanks))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
