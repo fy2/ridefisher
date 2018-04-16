@@ -53,7 +53,7 @@ def start(bot, update):
         update.message.reply_text('I am already active and hunting, mate! (btw you could check my logs to see my state...)')
     else:
         job = my_cron.new(command='PERL5LIB=/home/feyruz/perl5/lib/perl5:/home/feyruz/sandbox/RideAway-AutoResponder/lib /usr/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_autorespond.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='knight-rider')
-        job.setall( '*/6 * * * *')
+        job.setall( '*/12 * * * *')
         job2 = my_cron.new(command='PERL5LIB=/home/feyruz/perl5/lib/perl5:/home/feyruz/sandbox/RideAway-AutoResponder/lib /usr/bin/perl /home/feyruz/sandbox/RideAway-AutoResponder/script/ra_persist.pl >> /home/feyruz/sandbox/RideAway-AutoResponder/logs/crontab.out 2>&1', comment='persist')
         job2.setall( '*/1 * * * *')
 
