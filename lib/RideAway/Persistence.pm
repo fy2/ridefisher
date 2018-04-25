@@ -116,15 +116,17 @@ sub run {
         foreach my $ride (@rides) {
             my $retries = $ride->retries;
             my $retries_to_go = $self->max_retries - $retries;
-            $self->send_telegram(
-                sprintf(
-                    'Persist - Re-applying to Ride: id: [%d], price: [%d], [%s]. Got [%d] retries. Next update: [%d] seconds',
-                    $ride->id,
-                    $ride->price,
-                    substr( $ride->location_from, 0, 50 ),
-                    $retries_to_go,
-                    $wait_retry,
-            ));
+            if (! $retries_to_go % 5 ) {
+                $self->send_telegram(
+                    sprintf(
+                        'Persist - Re-applying to Ride id: [%d], price: [%d], [%s]. Got [%d] retries left.',
+                        $ride->id,
+                        $ride->price,
+                        substr( $ride->location_from, 0, 50 ),
+                        $retries_to_go,
+                        $wait_retry,
+                ));
+            }
 
             my $status = $self->apply_to_ride($ride);
             $ride->update({retries => $retries + 1});
@@ -150,7 +152,7 @@ sub _sleep_retry {
 
 
 sub _wait_between_ride_clicks {
-    int(rand(5)) + 3;
+    int(rand(3)) + 3;
 }
 
 sub _wait_retry {

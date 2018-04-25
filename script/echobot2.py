@@ -24,6 +24,7 @@ from crontab import CronTab
 from sh import tail
 import datetime
 import subprocess
+import sqlite3
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -74,6 +75,27 @@ def persistoff(bot, update):
         config.write(configfile)
 
     update.message.reply_text('Persistent Mode: 0')
+
+def persist(bot, update, args):
+    try:
+        ride_id = int(args[0])
+        if not ride_id:
+            update.message.reply_text('Sorry but I need a Ride ID!')
+            return
+        c = sqlite3.connect('/home/feyruz/sandbox/RideAway-AutoResponder/rideaway.db')
+        t = (ride_id,)
+        rows = c.execute('SELECT id FROM ride WHERE id=?', t)
+        if rows.fetchone():
+            c.execute('UPDATE ride SET should_persist = 1 WHERE id=?', t)
+            c.commit()
+            update.message.reply_text('Persistence activated on Ride: [%s]' % (ride_id))
+        else:
+            update.message.reply_text('No such ride! [%s]' % (ride_id))
+        c.close()
+    except:
+        update.message.reply_text('There was an error, processing your command')
+    return
+
 
 def stop(bot, update):
     """Send a message when the command /stop is issued."""
@@ -163,6 +185,8 @@ def main():
     dp.add_handler(CommandHandler("unsinn", unsinn))
     dp.add_handler(CommandHandler("dig", dig))
     dp.add_handler(CommandHandler("thanks", thanks))
+    dp.add_handler(CommandHandler("p", set_persist,
+                                  pass_args=True))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))

@@ -1,5 +1,6 @@
 package RideAway::AutoResponder;
 
+
 use Moose;
 use MooseX::Configuration;
 
@@ -311,8 +312,13 @@ sub apply_to_ride {
             $ride->url );
     }
     elsif ($status->code eq 'locked_for_others') {
-        $ride->update( { should_persist => 1 } )
-            if $self->persistent_mode_is_on;
+        $self->send_telegram(
+                sprintf "SOMEONE-ELSE locked: Date:[%s], Price:[%s], Van: [%s...], Naar: [%s...]. Should I try to snatch it back? If yes, type /p %d",
+                $ride->ride_dt,
+                $ride->price,
+                substr( $ride->location_from, 0, 50 ),
+                substr( $ride->location_to, 0, 50 ),
+                $ride->id );
     }
     else {
         $self->send_telegram( sprintf "Failed to get: Status: [%s], [%s...]", $status->code, substr( $ride->location_from, 0, 50 ) );

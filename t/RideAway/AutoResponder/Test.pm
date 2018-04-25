@@ -93,8 +93,6 @@ sub test_send_message :Test(no_plan) {
         ]
     ), 'message passed correctly to text magix'
          or diag explain @args;
-
-
 }
 
 
@@ -410,6 +408,36 @@ sub test_apply : Test(no_plan) {
 
         is($ride->status->code, 'locked_for_me', 'decoded content indicated ride is locked for me');
     };
+}
+
+sub test_apply_to_ride : Test(no_plan) {
+    my $self = shift;
+
+    my $rd = $self->{rd};
+    my $ride = $rd->make_ride( $self->{sample_email_single_qp_body} );
+    $ride = Test::MockObject::Extends->new($ride);
+    my $status_rs = $self->{schema}->resultset('Status');
+
+    my $me      = $status_rs->search({ code => 'locked_for_me'})->single;
+    my $others  = $status_rs->search({ code => 'locked_for_others'})->single;
+    my $unknown = $status_rs->search({ code => 'unknown'})->single;
+
+
+    my $telegram_text;
+    $rd->mock('send_telegram', sub { shift; $telegram_text = shift; } );
+
+    $ride->set_always('apply', $me);
+    $rd->apply_to_ride($ride);
+    like($telegram_text, qr/BINGO A RIDE IS LOCKED/, 'locked for me msg');
+
+    $ride->set_always('apply', $others);
+    $rd->apply_to_ride($ride);
+    my $ride_id = $ride->id;
+    like($telegram_text, qr/SOMEONE-ELSE locked.+type \/p $ride_id/, 'locked for others msg');
+
+    $ride->set_always('apply', $unknown);
+    $rd->apply_to_ride($ride);
+    like($telegram_text, qr/Failed to get: Status.+/, 'failed msg');
 }
 
 sub test_database_storage : Test(no_plan) {
