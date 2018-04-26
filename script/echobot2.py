@@ -76,7 +76,7 @@ def persistoff(bot, update):
 
     update.message.reply_text('Persistent Mode: 0')
 
-def persist(bot, update, args):
+def set_persist(bot, update, args):
     try:
         ride_id = int(args[0])
         if not ride_id:
