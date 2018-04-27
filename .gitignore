@@ -27,3 +27,4 @@ RideAway-AutoResponder-*.tar.gz
 rideaway.db
 logs/*
 *.swo
+jupyter/.ipynb_checkpoints*
