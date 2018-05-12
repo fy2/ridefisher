@@ -277,6 +277,17 @@ sub run {
                     $seconds_to_go -= 5 unless $self->is_test_mode;
                 }
                 else {
+                    eval {
+                        $self->send_telegram(
+                            sprintf "Ignoring: Date:[%s], Price:[%s], Van: [%s...], Naar: [%s...], ID: [%s], Link [%s]",
+                            $ride->ride_dt,
+                            $ride->price,
+                            substr( $ride->location_from, 0, 50 ),
+                            substr( $ride->location_to, 0, 50 ),
+                            $ride->id,
+                            $ride->url
+                        );
+                    };
                     $ride->update( { should_persist => 1 } )
                         if  $ride->status->code eq 'locked_for_others'
                             && $self->persistent_mode_is_on;
@@ -333,9 +344,10 @@ sub ride_passes_criteria {
         $logger->warn("Ride status is not 'new' [$code]");
         return 0;
     }
-
+    my $hour = $ride->ride_dt->hour;
+    return 0 if ($hour >= 22 or $hour < 4) and $ride->price <= 150;
     return 1 if $ride->location_to =~ /schiphol/i or $ride->location_from =~ /schiphol/i;
-    return 1 if $ride->price >= 70;
+    return 1 if $ride->price >= 150;
     return 0;
 }
 

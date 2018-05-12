@@ -337,6 +337,7 @@ sub test_make_ride : Test(no_plan) {
 sub test_ride_passes_criteria: Test(no_plan) {
     my $self = shift;
 
+    # BLOCKER take crit from CONFIG
     my $rd = $self->{rd};
     my $ride;
     $ride = $rd->make_ride( $self->{sample_email_single_qp_body} );
@@ -348,9 +349,20 @@ sub test_ride_passes_criteria: Test(no_plan) {
     is($rd->ride_passes_criteria($ride), 0, 'doesnt pass because not new');
     my $status_new     = $status_rs->search({ code => 'new'})->single;
     $ride->update({status => $status_new,
-                   price => 1000
+                   price => 100
     });
-    # BLOCKER take crit from CONFIG
+
+    # midnight rides are not taken:
+    $ride->ride_dt(DateTime->new(year => 2018, month => 10, day => 16, hour => 00));
+    is($rd->ride_passes_criteria($ride), 0, 'doesnt pass because ride is between 22 and 03');
+
+    $ride->ride_dt(DateTime->new(year => 2018, month => 10, day => 16, hour => 03));
+    is($rd->ride_passes_criteria($ride), 0, 'doesnt pass because ride is between 22 and 03');
+
+    $ride->ride_dt(DateTime->new(year => 2018, month => 10, day => 16, hour => 22));
+    is($rd->ride_passes_criteria($ride), 0, 'doesnt pass because ride is between 22 and 03');
+
+    $ride->ride_dt(DateTime->new(year => 2018, month => 10, day => 16, hour => 04));
     is($rd->ride_passes_criteria($ride), 1, 'new and lucrative');
 
 }
