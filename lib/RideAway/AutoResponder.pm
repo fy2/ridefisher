@@ -344,6 +344,12 @@ sub ride_passes_criteria {
         $logger->warn("Ride status is not 'new' [$code]");
         return 0;
     }
+    my $created_hour = $ride->created_dt->hour;
+    if ($created_hour <= 3 ) {
+        $logger->info( sprintf "Assuming yavuz is asleep");
+        return 0 if $created_hour <= 3;
+    }
+
     my $hour = $ride->ride_dt->hour;
     return 0 if ($hour >= 22 or $hour < 4) and $ride->price <= 150;
     return 1 if $ride->location_to =~ /schiphol/i or $ride->location_from =~ /schiphol/i;

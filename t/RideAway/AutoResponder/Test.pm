@@ -362,6 +362,10 @@ sub test_ride_passes_criteria: Test(no_plan) {
     $ride->ride_dt(DateTime->new(year => 2018, month => 10, day => 16, hour => 22));
     is($rd->ride_passes_criteria($ride), 0, 'doesnt pass because ride is between 22 and 03');
 
+    $ride->created_dt(DateTime->new(year => 2018, month => 10, day => 16, hour => 03));
+    is($rd->ride_passes_criteria($ride), 0, 'created midnight, yavuz could be asleep, ignore');
+
+    $ride->created_dt(DateTime->new(year => 2018, month => 10, day => 16, hour => 04));
     $ride->ride_dt(DateTime->new(year => 2018, month => 10, day => 16, hour => 04));
     is($rd->ride_passes_criteria($ride), 1, 'new and lucrative');
 
